@@ -1,0 +1,106 @@
+<COLLADA xmlns="http://www.collada.org/2005/11/COLLADASchema" version="1.4.1">
+  <asset>
+    <contributor/>
+    <created>2021-08-04T08:39:40.283975</created>
+    <modified>2021-08-04T08:39:40.283983</modified>
+    <unit name="meter" meter="1.0"/>
+    <up_axis>Z_UP</up_axis>
+  </asset>
+  <library_effects>
+    <effect id="effect_Fusion" name="effect_Fusion">
+      <profile_COMMON>
+        <technique sid="common">
+          <phong>
+            <emission>
+              <color>0.0 0.0 0.0 1.0</color>
+            </emission>
+            <ambient>
+              <color>0.0 0.0 0.0 1.0</color>
+            </ambient>
+            <diffuse>
+              <color>0.8705882430076599 0.8705882430076599 0.8705882430076599 1.0</color>
+            </diffuse>
+            <specular>
+              <color>1 1 1 1.0</color>
+            </specular>
+            <shininess>
+              <float>0.0</float>
+            </shininess>
+            <reflective>
+              <color>0.0 0.0 0.0 1.0</color>
+            </reflective>
+            <reflectivity>
+              <float>0.0</float>
+            </reflectivity>
+            <transparent>
+              <color>0.0 0.0 0.0 1.0</color>
+            </transparent>
+            <transparency>
+              <float>1.0</float>
+            </transparency>
+          </phong>
+        </technique>
+        <extra>
+          <technique profile="GOOGLEEARTH">
+            <double_sided>0</double_sided>
+          </technique>
+        </extra>
+      </profile_COMMON>
+    </effect>
+  </library_effects>
+  <library_geometries>
+    <geometry id="geometry0" name="Fusion">
+      <mesh>
+        <source id="cubeverts-array0">
+          <float_array count="132" id="cubeverts-array0-array">0.233 -0.275 0.184 0.233 -0.275 0.224 0.233 -0.269 0.184 0.233 -0.269 0.224 0.253 -0.275 0.224 0.2429019 -0.2518494 0.224 0.2426408 0.2509592 0.224 0.233 0.2453931 0.224 0.233 -0.2461325 0.224 0.253 0.275 0.224 0.233 0.275 0.224 0.233 0.2676576 0.224 0.2329019 -0.2691699 0.184 0.2329019 -0.2691699 0.224 0.253 -0.275 0.184 0.2429019 -0.2518494 0.184 0.233 0.2453931 0.184 0.2426408 0.2509592 0.184 0.233 -0.2461325 0.184 0.233 0.275 0.184 0.253 0.275 0.184 0.233 0.2676576 0.184 -0.2126736 -0.01191672 0.184 -0.1926736 -0.0003697178 0.184 -0.1926736 -0.0003697178 0.224 -0.2126736 -0.01191672 0.224 0.2326408 0.2682797 0.224 -0.2126736 0.01117729 0.224 0.2326408 0.2682797 0.184 -0.2200316 -0.007668556 0.184 -0.2195095 0.007230593 0.184 -0.2240716 -0.0006711895 0.184 -0.2126736 0.01117729 0.184 -0.2195095 0.007230593 0.224 -0.2200316 -0.007668556 0.224 -0.2240716 -0.0006711895 0.224 -0.2163526 -0.01404081 0.224 -0.2163526 -0.01404081 0.184 -0.2260915 -0.004169873 0.184 -0.2263526 0.003279701 0.184 -0.2160915 0.01315063 0.184 -0.2260915 -0.004169873 0.224 -0.2263526 0.003279701 0.224 -0.2160915 0.01315063 0.224</float_array>
+          <technique_common>
+            <accessor count="44" source="#cubeverts-array0-array" stride="3">
+              <param type="float" name="X"/>
+              <param type="float" name="Y"/>
+              <param type="float" name="Z"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="cubenormals-array0">
+          <float_array count="264" id="cubenormals-array0-array">-1 0 0 -1 0 0 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 -0 1 0 -0 1 0.8659939 -0.5000547 0 0.8659939 -0.5000547 0 0 0 -1 0 0 -1 0 0 -1 0 0 -1 0 0 -1 0 0 -1 0 -0 -1 0 0 -1 0 -1 0 0 -1 0 0 0 1 -1 0 0 -1 0 0 0 0 1 -1 0 0 -1 0 0 0 1 0 0 1 0 1 0 0 1 -0 0 0 0 -1 0 0 -1 0 0 -1 0 0 1 0 0 1 0 0 1 -0.5000001 -0.8660254 0 -0.5000001 -0.8660254 0 0 0 -1 0 0 -1 0.5 -0.8660254 0 0.5 -0.8660254 0 0.5 0.8660254 0 0.5 0.8660254 0 0 0 1 0 -0 1 0 0 1 0.8660201 0.5000093 0 0.8660201 0.5000093 0 0 0 -1 0 0 -1 0 0 -1 0 0 -1 0 0 1 0 0 1 0 0 1 0 0 1 0.5000005 -0.8660251 0 0.5000005 -0.8660251 0 0 0 -1 -0 -0 -1 0 -0 -1 -0.5 0.8660254 0 -0.5 0.8660254 0 0 0 -1 0 0 -1 0 0 -1 0 0 -1 0 0 1 0 0 1 0 0 1 0 0 1 -0.8660248 -0.5000011 0 -0.8660248 -0.5000011 0 0.4999999 0.8660255 0 0.4999999 0.8660255 0 -0.5000004 -0.8660251 0 -0.5000004 -0.8660251 0 -0.8660262 0.4999987 0 -0.8660262 0.4999987 0 -0.5000002 0.8660253 0 -0.5000002 0.8660253 0 -0.8660265 -0.4999981 0 -0.8660265 -0.4999981 0 -0.8660254 0.5000001 0 -0.8660254 0.5000001 0</float_array>
+          <technique_common>
+            <accessor count="88" source="#cubenormals-array0-array" stride="3">
+              <param type="float" name="X"/>
+              <param type="float" name="Y"/>
+              <param type="float" name="Z"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <vertices id="cubeverts-array0-vertices">
+          <input semantic="POSITION" source="#cubeverts-array0"/>
+        </vertices>
+        <triangles count="88" material="ref_Fusion">
+          <input offset="0" semantic="VERTEX" source="#cubeverts-array0-vertices"/>
+          <input offset="1" semantic="NORMAL" source="#cubenormals-array0"/>
+          <p>0 0 1 0 2 0 2 1 1 1 3 1 4 2 3 2 1 2 5 3 3 3 4 3 6 4 7 4 8 4 6 5 8 5 5 5 9 6 10 6 11 6 9 7 11 7 6 7 4 8 9 8 5 8 5 9 9 9 6 9 2 10 3 10 12 10 12 11 3 11 13 11 2 12 14 12 0 12 2 13 15 13 14 13 16 14 17 14 18 14 18 15 17 15 15 15 19 16 20 16 21 16 21 17 20 17 17 17 20 18 14 18 15 18 20 19 15 19 17 19 14 20 4 20 0 20 0 21 4 21 1 21 5 22 8 22 3 22 18 23 8 23 16 23 16 24 8 24 7 24 11 25 7 25 6 25 21 26 11 26 19 26 19 27 11 27 10 27 9 28 20 28 19 28 9 29 19 29 10 29 4 30 14 30 20 30 4 31 20 31 9 31 12 32 18 32 2 32 22 33 23 33 12 33 12 34 23 34 18 34 8 35 13 35 3 35 24 36 25 36 13 36 24 37 13 37 8 37 12 38 13 38 22 38 22 39 13 39 25 39 18 40 15 40 2 40 16 41 21 41 17 41 24 42 23 42 16 42 24 43 16 43 7 43 8 44 18 44 23 44 8 45 23 45 24 45 26 46 27 46 24 46 7 47 11 47 26 47 7 48 26 48 24 48 11 49 21 49 28 49 11 50 28 50 26 50 29 51 30 51 22 51 31 52 30 52 29 52 22 53 32 53 23 53 30 54 32 54 22 54 33 55 34 55 25 55 33 56 35 56 34 56 27 57 25 57 24 57 27 58 33 58 25 58 36 59 37 59 22 59 36 60 22 60 25 60 32 61 28 61 23 61 21 62 16 62 28 62 28 63 16 63 23 63 32 64 27 64 28 64 28 65 27 65 26 65 29 66 22 66 37 66 38 67 31 67 29 67 39 68 30 68 31 68 30 69 40 69 32 69 25 70 34 70 36 70 35 71 41 71 34 71 33 72 42 72 35 72 43 73 33 73 27 73 37 74 34 74 29 74 37 75 36 75 34 75 27 76 32 76 40 76 27 77 40 77 43 77 29 78 41 78 38 78 29 79 34 79 41 79 35 80 31 80 38 80 35 81 38 81 41 81 39 82 42 82 30 82 30 83 42 83 33 83 31 84 35 84 39 84 39 85 35 85 42 85 43 86 40 86 30 86 43 87 30 87 33 87</p>
+        </triangles>
+      </mesh>
+    </geometry>
+  </library_geometries>
+  <library_materials>
+    <material id="mat_Fusion" name="Fusion">
+      <instance_effect url="#effect_Fusion"/>
+    </material>
+  </library_materials>
+  <library_visual_scenes>
+    <visual_scene id="myscene">
+      <node id="node0" name="node0">
+        <instance_geometry url="#geometry0">
+          <bind_material>
+            <technique_common>
+              <instance_material symbol="ref_Fusion" target="#mat_Fusion"/>
+            </technique_common>
+          </bind_material>
+        </instance_geometry>
+      </node>
+    </visual_scene>
+  </library_visual_scenes>
+  <scene>
+    <instance_visual_scene url="#myscene"/>
+  </scene>
+</COLLADA>

@@ -1,0 +1,97 @@
+<?xml version="1.0"?>
+<robot name="bobik" xmlns:xacro="http://ros.org/wiki/xacro">
+    <xacro:include filename="$(find bobik_robot)/urdf/common_properties.xacro" />
+    <xacro:include filename="$(find bobik_robot)/urdf/materials.xacro" />
+    <xacro:include filename="$(find bobik_robot)/urdf/bobik.gazebo.xacro"/>
+
+    <xacro:property name="wheel_diameter" value="0.123" />
+
+    <!-- root_link is a workaround for base_link to have an inertia mass -->
+    <link name="base_footprint"></link>
+    <joint name="root_joint" type="fixed">
+        <parent link="base_footprint" />
+        <child link="base_link" />
+    </joint>
+    <link name="base_link">
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <mesh filename="file:///home/honza/ros2_foxy/src/bobik_robot/meshes/base_link.dae" />
+            </geometry>
+        </visual>
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <box size="0.5 0.5 0.2" />
+            </geometry>
+        </collision>
+        <inertial>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <mass value="1.5" />
+            <inertia ixx="2.2124416e-03" ixy="-1.2294101e-05" ixz="3.4938785e-05" iyy="2.1193702e-03" iyz="-5.0120904e-06" izz="2.0064271e-03" />
+        </inertial>
+    </link>
+
+    <xacro:macro name="caster" params="prefix joint_origin">
+        <joint name="${prefix}_caster_rotation_joint" type="revolute">
+            <parent link="base_link" />
+            <child link="${prefix}_caster_rotation_link" />
+            <origin xyz="${joint_origin}" rpy="0 0 ${0*M_PI/180}" />
+            <axis xyz="0 0 1" />
+            <limit lower="${-M_PI/2}" upper="${M_PI/2}" effort="20" velocity="${M_PI}" />
+        </joint>
+
+        <link name="${prefix}_caster_rotation_link">
+            <visual>
+                <origin xyz="-0.04 -0.024 -0.025" rpy="0 0 0" />
+                <geometry>
+                    <mesh filename="package://bobik_robot/meshes/caster_rotation_link.dae" />
+                </geometry>
+            </visual>
+            <collision>
+                <origin xyz="0 0.013 0.029" rpy="0 0 0" />
+                <geometry>
+                    <box size="0.08 0.075 0.11" />
+                </geometry>
+            </collision>
+            <inertial>
+                <origin xyz="-0.04 -0.026 -0.025" rpy="0 0 0" />
+                <mass value="0.5" />
+                <inertia ixx="2.2124416e-03" ixy="-1.2294101e-05" ixz="3.4938785e-05" iyy="2.1193702e-03" iyz="-5.0120904e-06" izz="2.0064271e-03" />
+            </inertial>
+        </link>
+
+        <joint name="${prefix}_caster_wheel_joint" type="continuous">
+            <parent link="${prefix}_caster_rotation_link" />
+            <child link="${prefix}_caster_wheel_link" />
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <axis xyz="0 1 0" />
+            <limit effort="30" velocity="${M_PI*2}" />
+        </joint>
+
+        <link name="${prefix}_caster_wheel_link">
+            <visual>
+                <origin xyz="0 0 0" rpy="${M_PI/2} 0 0" />
+                <geometry>
+                    <cylinder length="0.024" radius="${wheel_diameter/2}" />
+                </geometry>
+                <material name="mat_wheel"/>
+            </visual>
+            <collision>
+                <origin xyz="0 0 0" rpy="0 0 0" />
+                <geometry>
+                    <box size="${wheel_diameter} 0.024 ${wheel_diameter}" />
+                </geometry>
+            </collision>
+            <inertial>
+                <origin xyz="0 0 0" rpy="0 0 0" />
+                <mass value="0.15" />
+                <inertia ixx="2.2124416e-03" ixy="-1.2294101e-05" ixz="3.4938785e-05" iyy="2.1193702e-03" iyz="-5.0120904e-06" izz="2.0064271e-03" />
+            </inertial>
+        </link>
+    </xacro:macro>
+    <xacro:caster prefix="fl" joint_origin="0.224 0.23 0.08" />
+    <xacro:caster prefix="fr" joint_origin="0.224 -0.23 0.08" />
+    <xacro:caster prefix="r"  joint_origin="-0.18 0.0 0.08" />
+
+</robot>
