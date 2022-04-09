@@ -4,6 +4,9 @@
 <!-- |    EDITING THIS FILE BY HAND IS NOT RECOMMENDED                                 | -->
 <!-- =================================================================================== -->
 <robot name="bobik">
+  <material name="mat_wheel">
+    <texture filename="package://bobik_robot/meshes/wheel.png"/>
+  </material>
   <!-- Init colour -->
   <material name="black">
     <color rgba="0.0 0.0 0.0 1.0"/>
@@ -156,9 +159,6 @@
       </plugin>
     </sensor>
   </gazebo>
-  <material name="jetson">
-    <texture filename="package://bobik_robot/meshes/wheel.png"/>
-  </material>
   <!-- root_link is a workaround for base_link to have an inertia mass -->
   <link name="base_footprint"/>
   <joint name="root_joint" type="fixed">
@@ -175,7 +175,7 @@
     <collision>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <box size="0.5 0.5 0.2"/>
+        <mesh filename="file:///home/honza/ros2_foxy/src/bobik_robot/meshes/base_link_collision.dae"/>
       </geometry>
     </collision>
     <inertial>
@@ -187,19 +187,19 @@
   <joint name="fl_caster_rotation_joint" type="revolute">
     <parent link="base_link"/>
     <child link="fl_caster_rotation_link"/>
-    <origin rpy="0 0 0.0" xyz="0.224 0.23 0.08"/>
+    <origin rpy="0 0 0.0" xyz="0.134 0.23 0.173"/>
     <axis xyz="0 0 1"/>
     <limit effort="20" lower="-1.5707963267948966" upper="1.5707963267948966" velocity="3.141592653589793"/>
   </joint>
   <link name="fl_caster_rotation_link">
     <visual>
-      <origin rpy="0 0 0" xyz="-0.04 -0.024 -0.025"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
         <mesh filename="package://bobik_robot/meshes/caster_rotation_link.dae"/>
       </geometry>
     </visual>
     <collision>
-      <origin rpy="0 0 0" xyz="0 0.013 0.029"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
         <box size="0.08 0.075 0.11"/>
       </geometry>
@@ -213,17 +213,17 @@
   <joint name="fl_caster_wheel_joint" type="continuous">
     <parent link="fl_caster_rotation_link"/>
     <child link="fl_caster_wheel_link"/>
-    <origin rpy="0 0 0" xyz="0 0 0"/>
+    <origin rpy="0 0 0" xyz="0 0 -0.110"/>
     <axis xyz="0 1 0"/>
     <limit effort="30" velocity="6.283185307179586"/>
   </joint>
   <link name="fl_caster_wheel_link">
     <visual>
-      <origin rpy="0 0 0" xyz="0 -0.012 0"/>
+      <origin rpy="1.5707963267948966 0 0" xyz="0 0 0"/>
       <geometry>
-        <cylinder length="0.024" radius="0.123"/>
+        <cylinder length="0.024" radius="0.0615"/>
       </geometry>
-      <material name="jetson"/>
+      <material name="mat_wheel"/>
     </visual>
     <collision>
       <origin rpy="0 0 0" xyz="0 0 0"/>
@@ -240,19 +240,19 @@
   <joint name="fr_caster_rotation_joint" type="revolute">
     <parent link="base_link"/>
     <child link="fr_caster_rotation_link"/>
-    <origin rpy="0 0 0.0" xyz="0.224 -0.23 0.08"/>
+    <origin rpy="0 0 0.0" xyz="0.134 -0.23 0.173"/>
     <axis xyz="0 0 1"/>
     <limit effort="20" lower="-1.5707963267948966" upper="1.5707963267948966" velocity="3.141592653589793"/>
   </joint>
   <link name="fr_caster_rotation_link">
     <visual>
-      <origin rpy="0 0 0" xyz="-0.04 -0.024 -0.025"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
         <mesh filename="package://bobik_robot/meshes/caster_rotation_link.dae"/>
       </geometry>
     </visual>
     <collision>
-      <origin rpy="0 0 0" xyz="0 0.013 0.029"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
         <box size="0.08 0.075 0.11"/>
       </geometry>
@@ -266,17 +266,17 @@
   <joint name="fr_caster_wheel_joint" type="continuous">
     <parent link="fr_caster_rotation_link"/>
     <child link="fr_caster_wheel_link"/>
-    <origin rpy="0 0 0" xyz="0 0 0"/>
+    <origin rpy="0 0 0" xyz="0 0 -0.110"/>
     <axis xyz="0 1 0"/>
     <limit effort="30" velocity="6.283185307179586"/>
   </joint>
   <link name="fr_caster_wheel_link">
     <visual>
-      <origin rpy="0 0 0" xyz="0 -0.012 0"/>
+      <origin rpy="1.5707963267948966 0 0" xyz="0 0 0"/>
       <geometry>
-        <cylinder length="0.024" radius="0.123"/>
+        <cylinder length="0.024" radius="0.0615"/>
       </geometry>
-      <material name="jetson"/>
+      <material name="mat_wheel"/>
     </visual>
     <collision>
       <origin rpy="0 0 0" xyz="0 0 0"/>
@@ -293,19 +293,19 @@
   <joint name="r_caster_rotation_joint" type="revolute">
     <parent link="base_link"/>
     <child link="r_caster_rotation_link"/>
-    <origin rpy="0 0 0.0" xyz="-0.18 0.0 0.08"/>
+    <origin rpy="0 0 0.0" xyz="-0.270 0.0 0.173"/>
     <axis xyz="0 0 1"/>
     <limit effort="20" lower="-1.5707963267948966" upper="1.5707963267948966" velocity="3.141592653589793"/>
   </joint>
   <link name="r_caster_rotation_link">
     <visual>
-      <origin rpy="0 0 0" xyz="-0.04 -0.024 -0.025"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
         <mesh filename="package://bobik_robot/meshes/caster_rotation_link.dae"/>
       </geometry>
     </visual>
     <collision>
-      <origin rpy="0 0 0" xyz="0 0.013 0.029"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
         <box size="0.08 0.075 0.11"/>
       </geometry>
@@ -319,17 +319,17 @@
   <joint name="r_caster_wheel_joint" type="continuous">
     <parent link="r_caster_rotation_link"/>
     <child link="r_caster_wheel_link"/>
-    <origin rpy="0 0 0" xyz="0 0 0"/>
+    <origin rpy="0 0 0" xyz="0 0 -0.110"/>
     <axis xyz="0 1 0"/>
     <limit effort="30" velocity="6.283185307179586"/>
   </joint>
   <link name="r_caster_wheel_link">
     <visual>
-      <origin rpy="0 0 0" xyz="0 -0.012 0"/>
+      <origin rpy="1.5707963267948966 0 0" xyz="0 0 0"/>
       <geometry>
-        <cylinder length="0.024" radius="0.123"/>
+        <cylinder length="0.024" radius="0.0615"/>
       </geometry>
-      <material name="jetson"/>
+      <material name="mat_wheel"/>
     </visual>
     <collision>
       <origin rpy="0 0 0" xyz="0 0 0"/>
@@ -341,6 +341,30 @@
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <mass value="0.15"/>
       <inertia ixx="2.2124416e-03" ixy="-1.2294101e-05" ixz="3.4938785e-05" iyy="2.1193702e-03" iyz="-5.0120904e-06" izz="2.0064271e-03"/>
+    </inertial>
+  </link>
+  <joint name="lidar_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="lidar_link"/>
+  </joint>
+  <link name="lidar_link">
+    <visual>
+      <origin rpy="0 0 0" xyz="0.12 0.13 0.23249999999999998"/>
+      <geometry>
+        <cylinder length="0.018" radius="0.04"/>
+      </geometry>
+      <material name="black"/>
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <box size="0.08 0.08 0.045"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <mass value="0.2"/>
+      <inertia ixx="2.2124416e-04" ixy="-1.2294101e-06" ixz="3.4938785e-06" iyy="2.1193702e-04" iyz="-5.0120904e-05" izz="2.0064271e-04"/>
     </inertial>
   </link>
 </robot>

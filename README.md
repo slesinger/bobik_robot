@@ -7,6 +7,14 @@ Bacause of [bug in rviz to display cylinders](https://answers.ros.org/question/3
 ```
 echo 'export LC_NUMERIC="en_US.UTF-8"' >>~/.bashrc
 ```
+
+# CAD
+
+## Mesh edits
+Use Meshalab to reduce number of triangles. Filters > Remeshing, Simplification and Reconstruction > Simplification: Quadratic Edge Collapse Decimation.
+
+No idea how to export textures with Collada dae files. Alternative is set URDF ```<material texture="medvidek.jpg" />``` in ```<visual>```. No UV mapping is possible, though.
+
 # Startup
 ```
 clear && ros2 launch bobik_robot bobik_robot.launch.py
