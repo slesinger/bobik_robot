@@ -160,11 +160,11 @@
     </sensor>
   </gazebo>
   <!-- root_link is a workaround for base_link to have an inertia mass -->
-  <link name="base_footprint"/>
-  <joint name="root_joint" type="fixed">
-    <parent link="base_footprint"/>
-    <child link="base_link"/>
-  </joint>
+  <!-- <link name="base_footprint"></link>
+    <joint name="root_joint" type="fixed">
+        <parent link="base_footprint" />
+        <child link="base_link" />
+    </joint> -->
   <link name="base_link">
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
@@ -199,13 +199,13 @@
       </geometry>
     </visual>
     <collision>
-      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <origin rpy="0 0 0" xyz="0 0 -0.06"/>
       <geometry>
-        <box size="0.08 0.075 0.11"/>
+        <box size="0.10 0.11 0.12"/>
       </geometry>
     </collision>
     <inertial>
-      <origin rpy="0 0 0" xyz="-0.04 -0.026 -0.025"/>
+      <origin rpy="0 0 0" xyz="0 0 -0.1"/>
       <mass value="0.5"/>
       <inertia ixx="2.2124416e-03" ixy="-1.2294101e-05" ixz="3.4938785e-05" iyy="2.1193702e-03" iyz="-5.0120904e-06" izz="2.0064271e-03"/>
     </inertial>
@@ -252,13 +252,13 @@
       </geometry>
     </visual>
     <collision>
-      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <origin rpy="0 0 0" xyz="0 0 -0.06"/>
       <geometry>
-        <box size="0.08 0.075 0.11"/>
+        <box size="0.10 0.11 0.12"/>
       </geometry>
     </collision>
     <inertial>
-      <origin rpy="0 0 0" xyz="-0.04 -0.026 -0.025"/>
+      <origin rpy="0 0 0" xyz="0 0 -0.1"/>
       <mass value="0.5"/>
       <inertia ixx="2.2124416e-03" ixy="-1.2294101e-05" ixz="3.4938785e-05" iyy="2.1193702e-03" iyz="-5.0120904e-06" izz="2.0064271e-03"/>
     </inertial>
@@ -305,13 +305,13 @@
       </geometry>
     </visual>
     <collision>
-      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <origin rpy="0 0 0" xyz="0 0 -0.06"/>
       <geometry>
-        <box size="0.08 0.075 0.11"/>
+        <box size="0.10 0.11 0.12"/>
       </geometry>
     </collision>
     <inertial>
-      <origin rpy="0 0 0" xyz="-0.04 -0.026 -0.025"/>
+      <origin rpy="0 0 0" xyz="0 0 -0.1"/>
       <mass value="0.5"/>
       <inertia ixx="2.2124416e-03" ixy="-1.2294101e-05" ixz="3.4938785e-05" iyy="2.1193702e-03" iyz="-5.0120904e-06" izz="2.0064271e-03"/>
     </inertial>
@@ -346,10 +346,11 @@
   <joint name="lidar_joint" type="fixed">
     <parent link="base_link"/>
     <child link="lidar_link"/>
+    <origin rpy="0 0 0" xyz="0.12 0.13 0.23249999999999998"/>
   </joint>
   <link name="lidar_link">
     <visual>
-      <origin rpy="0 0 0" xyz="0.12 0.13 0.23249999999999998"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
         <cylinder length="0.018" radius="0.04"/>
       </geometry>

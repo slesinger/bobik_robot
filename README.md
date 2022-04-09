@@ -2,6 +2,11 @@
 
 # Installation
 
+## Install ROS2
+```
+sudo aptitude install ros-foxy-robot-localization
+```
+
 ## .bashrc
 Bacause of [bug in rviz to display cylinders](https://answers.ros.org/question/389967/urdf-and-rviz2-cylinder-not-showing/)
 ```
@@ -24,3 +29,6 @@ clear && ros2 launch bobik_robot bobik_robot.launch.py
 ```
 ros2 run teleop_twist_keyboard teleop_twist_keyboard
 ```
+
+# Nav2
+ros2 run tf2_ros static_transform_publisher "0" "0" "0" "0" "0" "0" "base_link" "odom"

@@ -7,11 +7,11 @@
     <xacro:property name="wheel_diameter" value="0.123" />
 
     <!-- root_link is a workaround for base_link to have an inertia mass -->
-    <link name="base_footprint"></link>
+    <!-- <link name="base_footprint"></link>
     <joint name="root_joint" type="fixed">
         <parent link="base_footprint" />
         <child link="base_link" />
-    </joint>
+    </joint> -->
     <link name="base_link">
         <visual>
             <origin xyz="0 0 0" rpy="0 0 0" />

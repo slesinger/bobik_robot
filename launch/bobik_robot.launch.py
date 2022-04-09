@@ -54,7 +54,7 @@ def generate_launch_description():
      
   declare_use_sim_time_cmd = DeclareLaunchArgument(
     name='use_sim_time',
-    default_value='True',
+    default_value='False',
     description='Use simulation (Gazebo) clock if true')
     
   # Specify the actions
@@ -81,7 +81,16 @@ def generate_launch_description():
     parameters=[{'use_sim_time': use_sim_time, 
     'robot_description': Command(['xacro ', urdf_model])}],
     arguments=[default_urdf_model_path])
- 
+
+  # start Nav2 localization
+  start_localization_node = Node(
+        package='robot_localization',
+        executable='ekf_node',
+        name='ekf_filter_node',
+        output='screen',
+        parameters=[os.path.join(pkg_share, 'config/ekf.yaml'), {'use_sim_time': LaunchConfiguration('use_sim_time')}]
+  )
+
   # Launch RViz
   start_rviz_cmd = Node(
     condition=IfCondition(use_rviz),
@@ -106,6 +115,7 @@ def generate_launch_description():
   ld.add_action(start_joint_state_publisher_cmd)
   ld.add_action(start_joint_state_publisher_gui_node)
   ld.add_action(start_robot_state_publisher_cmd)
+  ld.add_action(start_localization_node)
   ld.add_action(start_rviz_cmd)
  
   return ld
