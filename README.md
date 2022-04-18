@@ -7,6 +7,11 @@
 sudo aptitude install ros-foxy-robot-localization
 ```
 
+## Setup WiFi
+https://huobur.medium.com/how-to-setup-wifi-on-raspberry-pi-4-with-ubuntu-20-04-lts-64-bit-arm-server-ceb02303e49b
+
+> RPI 3 has only 2.4
+
 ## .bashrc
 Bacause of [bug in rviz to display cylinders](https://answers.ros.org/question/389967/urdf-and-rviz2-cylinder-not-showing/)
 ```
