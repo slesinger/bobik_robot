@@ -2,10 +2,10 @@
 
 Bobik's resources are split accros multiple git repositories.
 
-- [bobik_robot (this repo)](https://github.com/slesinger/bobik_robot)
-- [bobik_bridge](https://github.com/slesinger/bobik_bridge)
-- [bobik_driver](https://github.com/slesinger/bobik_driver)
-- [bobik_arduino](https://github.com/slesinger/bobik_arduino)
+- [bobik_robot (this repo)](https://github.com/slesinger/bobik_robot) All ROS2 stuff
+- [bobik_bridge](https://github.com/slesinger/bobik_bridge) ZeroMQ to ROS2 topics bridge
+- [bobik_driver](https://github.com/slesinger/bobik_driver) Jetson installation + pinout, C++ code ZeroMQ topics to Arduino serial
+- [bobik_arduino](https://github.com/slesinger/bobik_arduino) Platform.io code, Arduino pinout
 
 
 ```mermaid
@@ -15,6 +15,7 @@ classDiagram
     bobik_driver --|> bobik_arduino
 
     class bobik_robot {
+        [workstation]
         ROS2
         - launch
         - configuration
@@ -24,10 +25,11 @@ classDiagram
         Nav2()
     }
     class bobik_bridge {
+        [workstation]
         converts ZeroMq to ROS2 topics
     }
     class bobik_driver {
-        runs on Jetson
+        [Jetson]
         ttyTHS1 <-> Arduino
     }
     class bobik_arduino {
@@ -38,6 +40,17 @@ classDiagram
 ```
 
 > Diagram crafted in [live ditor](https://mermaid-js.github.io/mermaid-live-editor)
+# Documentation
+CAD
+
+Mechanical
+
+Electrical
+
+Workstation Install
+
+[Jetson Install](https://github.com/slesinger/bobik_driver#build)
+
 
 # Installation
 
@@ -56,8 +69,6 @@ Bacause of [bug in rviz to display cylinders](https://answers.ros.org/question/3
 ```
 echo 'export LC_NUMERIC="en_US.UTF-8"' >>~/.bashrc
 ```
-
-# CAD
 
 ## Mesh edits
 Use Meshalab to reduce number of triangles. Filters > Remeshing, Simplification and Reconstruction > Simplification: Quadratic Edge Collapse Decimation.
