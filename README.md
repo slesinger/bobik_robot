@@ -41,11 +41,13 @@ classDiagram
 
 > Diagram crafted in [live ditor](https://mermaid-js.github.io/mermaid-live-editor)
 # Documentation
-CAD
+[CAD](https://github.com/slesinger/bobik_robot/tree/main/docs/CAD)
 
-Mechanical
+[Mechanical](https://github.com/slesinger/bobik_robot/tree/main/docs/mechanical)
 
-Electrical
+[Electrical](https://github.com/slesinger/bobik_robot/tree/main/docs/electrical)
+
+[Software](https://github.com/slesinger/bobik_robot/tree/main/docs/software)
 
 [Workstation Install](https://github.com/slesinger/bobik_robot/blob/main/README.md#installation)
 
