@@ -47,7 +47,7 @@ Mechanical
 
 Electrical
 
-Workstation Install
+[Workstation Install](https://github.com/slesinger/bobik_robot/blob/main/README.md#installation)
 
 [Jetson Install](https://github.com/slesinger/bobik_driver#build)
 
