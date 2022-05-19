@@ -1,5 +1,44 @@
 # Bobik the Robot - High Level package
 
+Bobik's resources are split accros multiple git repositories.
+
+- [bobik_robot (this repo)](https://github.com/slesinger/bobik_robot)
+- [bobik_bridge](https://github.com/slesinger/bobik_bridge)
+- [bobik_driver](https://github.com/slesinger/bobik_driver)
+- [bobik_arduino](https://github.com/slesinger/bobik_arduino)
+
+
+```mermaid
+classDiagram
+    bobik_robot --|> bobik_bridge
+    bobik_bridge --|> bobik_driver
+    bobik_driver --|> bobik_arduino
+
+    class bobik_robot {
+        ROS2
+        - launch
+        - configuration
+        - description
+        - maps
+        - documentation
+        Nav2()
+    }
+    class bobik_bridge {
+        converts ZeroMq to ROS2 topics
+    }
+    class bobik_driver {
+        runs on Jetson
+        ttyTHS1 <-> Arduino
+    }
+    class bobik_arduino {
+        most of low level control and sensing
+    }
+
+
+```
+
+> Diagram crafted in [live ditor](https://mermaid-js.github.io/mermaid-live-editor)
+
 # Installation
 
 ## Install ROS2
