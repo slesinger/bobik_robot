@@ -25,11 +25,11 @@
                 <mesh filename="file:///home/honza/ros2_foxy/src/bobik_robot/meshes/base_link_collision.dae" />
             </geometry>
         </collision>
-        <inertial>
+        <!--<inertial>
             <origin xyz="0 0 0" rpy="0 0 0" />
             <mass value="1.5" />
             <inertia ixx="2.2124416e-03" ixy="-1.2294101e-05" ixz="3.4938785e-05" iyy="2.1193702e-03" iyz="-5.0120904e-06" izz="2.0064271e-03" />
-        </inertial>
+        </inertial>-->
     </link>
 
     <xacro:macro name="caster" params="prefix joint_origin">

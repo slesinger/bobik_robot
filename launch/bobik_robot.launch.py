@@ -1,8 +1,7 @@
 import os
 from ament_index_python import get_package_share_directory
 from launch import LaunchDescription
-from launch.actions import DeclareLaunchArgument
-from launch.actions import IncludeLaunchDescription
+from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription, SetEnvironmentVariable
 from launch.conditions import IfCondition, UnlessCondition
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import Command, LaunchConfiguration
@@ -10,6 +9,9 @@ from launch_ros.actions import Node
 from launch_ros.substitutions import FindPackageShare
 
 def generate_launch_description():
+
+  # Set environment variables
+  SetEnvironmentVariable(name='LC_NUMERIC', value='en_US.UTF-8')
 
   # Set the path to this package.
   pkg_share = FindPackageShare(package='bobik_robot').find('bobik_robot')
@@ -45,7 +47,7 @@ def generate_launch_description():
 
   declare_use_joint_state_publisher_cmd = DeclareLaunchArgument(
     name='gui',
-    default_value='True',
+    default_value='False',
     description='Flag to enable joint_state_publisher_gui')
 
   declare_use_robot_state_pub_cmd = DeclareLaunchArgument(
@@ -85,11 +87,11 @@ def generate_launch_description():
     name='joint_state_publisher')
 
   # A GUI to manipulate the joint state values
-  start_joint_state_publisher_gui_node = Node(
-    condition=IfCondition(gui),
-    package='joint_state_publisher_gui',
-    executable='joint_state_publisher_gui',
-    name='joint_state_publisher_gui')
+  #start_joint_state_publisher_gui_node = Node(
+  #  condition=IfCondition(gui),
+  #  package='joint_state_publisher_gui',
+  #  executable='joint_state_publisher_gui',
+  #  name='joint_state_publisher_gui')
 
   # Subscribe to the joint states of the robot, and publish the 3D pose of each link.
   start_robot_state_publisher_cmd = Node(
@@ -135,15 +137,15 @@ def generate_launch_description():
    # Declare the launch options
   ld.add_action(declare_urdf_model_path_cmd)
   ld.add_action(declare_rviz_config_file_cmd)
-  ld.add_action(declare_use_joint_state_publisher_cmd)
+  # ld.add_action(declare_use_joint_state_publisher_cmd)
   ld.add_action(declare_use_robot_state_pub_cmd)  
   ld.add_action(declare_use_rviz_cmd) 
   ld.add_action(declare_use_sim_time_cmd)
 
   # Add any actions
   ld.add_action(start_bobik_bridge_node)
-  ld.add_action(start_joint_state_publisher_cmd)
-  ld.add_action(start_joint_state_publisher_gui_node)
+  # ld.add_action(start_joint_state_publisher_cmd)
+  # ld.add_action(start_joint_state_publisher_gui_node)
   ld.add_action(start_robot_state_publisher_cmd)
   ld.add_action(start_localization_node)
   ld.add_action(start_ros2_navigation_cmd)

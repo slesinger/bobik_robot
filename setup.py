@@ -29,7 +29,8 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'state_publisher = bobik_robot.state_publisher:main'
+            'state_publisher = bobik_robot.state_publisher:main',
+            'bobik_robot = bobik_robot.bobik_robot:main'
         ],
     },
 )
