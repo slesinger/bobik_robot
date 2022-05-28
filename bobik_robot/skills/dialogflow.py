@@ -40,7 +40,7 @@ def detect_intent(project_id, session_id, text, language_code):
     }
 
 
-# /usr/bin/ffplay rtp://192.168.1.2:7081 -f s16le -ar 24000 -reorder_queue_size 0 -nodisp -loglevel quiet
+# /usr/bin/ffplay rtp://192.168.1.2:7081 -f s16le -ar 24000 -nodisp -loglevel quiet
 def stream_pcm_s16le24k_audio(audio_buffer): #TODO play in new thread
     """Streams a plain audio buffer over UDP."""
     udp = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -53,6 +53,7 @@ def stream_pcm_s16le24k_audio(audio_buffer): #TODO play in new thread
         if start >= len(audio_buffer):
             break
 
+# /usr/bin/ffplay rtp://192.168.1.2:7081 -f s16le -ar 48000 -nodisp -loglevel quiet
 def stream_opus_audio_48k(audio_buffer): #TODO play in new thread
     """Decode OGG Opus and streams over UDP."""
     opus_file = pyogg.OpusFile(audio_buffer, len(audio_buffer))
