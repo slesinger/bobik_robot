@@ -22,7 +22,6 @@ class BobikRobot(Node):
             text=query,
             language_code='cs-CZ'
         )
-        print(reply)
         response.reply = reply.get('reply')
         self.get_logger().info('Human query: %s >> %s (conf: %d, size: %d, millis %d)' % (query, reply.get('reply'), reply.get('confidence'), reply.get('audio_size'), reply.get('df_time')))
         return response
