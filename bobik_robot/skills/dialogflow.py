@@ -1,6 +1,8 @@
 from google.cloud import dialogflow_v2beta1 as dialogflow
+#from google.cloud import dialogflow
 import socket
 import time
+from threading import Thread
 # from utils.pyogg import OpusDecoder
 import pyogg
 
@@ -11,7 +13,8 @@ def detect_intent(project_id, session_id, text, language_code):
 
     Using the same `session_id` between requests allows continuation
     of the conversation."""
-    from google.cloud import dialogflow
+
+    if not text: return
 
     session_client = dialogflow.SessionsClient()
     session = session_client.session_path(project_id, session_id)
@@ -24,11 +27,13 @@ def detect_intent(project_id, session_id, text, language_code):
         request={"session": session, "query_input": query_input}
     )
     end = time.time()
-    print(response.output_audio[:3])
+
     if response.output_audio[:3] == b'RIF':
         stream_pcm_s16le24k_audio(response.output_audio)
     if response.output_audio[:3] == b'Ogg':
-        stream_opus_audio_48k(response.output_audio)
+        new_thread = Thread(target=stream_opus_audio_48k,args=(response.output_audio,))
+        new_thread.start()
+        # stream_opus_audio_48k(response.output_audio)
 
     return {
         'reply': response.query_result.fulfillment_text, 
@@ -57,24 +62,14 @@ def stream_pcm_s16le24k_audio(audio_buffer): #TODO play in new thread
 def stream_opus_audio_48k(audio_buffer): #TODO play in new thread
     """Decode OGG Opus and streams over UDP."""
     opus_file = pyogg.OpusFile(audio_buffer, len(audio_buffer))
-    print("Channels:\n  ", opus_file.channels)
-    print("Frequency (samples per second):\n  ",opus_file.frequency)
-    print("Buffer Length (bytes):\n  ", len(opus_file.buffer))
     decoded_pcm = opus_file.buffer
-    # opus_decoder = OpusDecoder()
-    # opus_decoder.set_channels(1)
-    # opus_decoder.set_sampling_frequency(24000)
-    # decoded_pcm = opus_decoder.decode(bytearray(audio_buffer))
     udp = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     start = 0
     while True:
         mv = memoryview(decoded_pcm).tobytes()
-        # save memoryview to file
         chunk = mv[start:start+UDP_CHUNK]
-        with open('/tmp/test'+str(start)+'.raw', 'wb') as f:
-            f.write(chunk)
         udp.sendto(chunk, ('127.0.0.1', 7081))
-        time.sleep(0.02)
+        time.sleep(0.01)
         start += UDP_CHUNK
         if start >= len(decoded_pcm):
             break

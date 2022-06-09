@@ -1,7 +1,8 @@
 import rclpy
 from rclpy.node import Node
+from threading import Thread
 from bobik_interfaces.srv import HumanQuery
-from skills import dialogflow
+from skills import dialogflow, dialogflow_actions
 
 class BobikRobot(Node):
 
@@ -22,13 +23,26 @@ class BobikRobot(Node):
             text=query,
             language_code='cs-CZ'
         )
+        if not reply:
+            response.reply = "<i>žádné zadání<i>"
+            return response
+
         response.reply = reply.get('reply')
         self.get_logger().info('Human query: %s >> %s (conf: %d, size: %d, millis %d)' % (query, reply.get('reply'), reply.get('confidence'), reply.get('audio_size'), reply.get('df_time')))
-        return response
+        if reply.get('action'):
+            try:
+                func = getattr(dialogflow_actions, reply.get('action'))
+                self.get_logger().info('Invoking action: %s ' % reply.get('action'))
+                new_thread = Thread(target=func,args=(reply.get('action_params'),))
+                new_thread.start()
+            except AttributeError:
+                self.get_logger().info('Action not found: %s ' % reply.get('action'))
+        return response  # Response visible in Web UI
 
 
 def main():
     node = BobikRobot()
+
     try:
         rclpy.spin(node)
     except KeyboardInterrupt:

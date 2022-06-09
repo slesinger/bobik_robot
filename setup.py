@@ -19,6 +19,8 @@ setup(
         (os.path.join('share', package_name, 'params'), glob('params/*')),
         (os.path.join('share', package_name, 'urdf'), glob('urdf/*')),
         (os.path.join('share', package_name, 'rviz'), glob('rviz/*')),
+        (os.path.join('lib', package_name, 'skills'), glob('bobik_robot/skills/*.py')),
+        (os.path.join('lib', package_name, 'pyogg'), glob('bobik_robot/pyogg/*.py')),
     ],
     install_requires=['setuptools'],
     zip_safe=True,

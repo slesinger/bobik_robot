@@ -3,7 +3,7 @@ from ament_index_python import get_package_share_directory
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription, SetEnvironmentVariable
 from launch.conditions import IfCondition, UnlessCondition
-from launch.launch_description_sources import PythonLaunchDescriptionSource
+from launch.launch_description_sources import PythonLaunchDescriptionSource, AnyLaunchDescriptionSource
 from launch.substitutions import Command, LaunchConfiguration
 from launch_ros.actions import Node
 from launch_ros.substitutions import FindPackageShare
@@ -45,11 +45,6 @@ def generate_launch_description():
     default_value=default_rviz_config_path,
     description='Full path to the RVIZ config file to use')
 
-  declare_use_joint_state_publisher_cmd = DeclareLaunchArgument(
-    name='gui',
-    default_value='False',
-    description='Flag to enable joint_state_publisher_gui')
-
   declare_use_robot_state_pub_cmd = DeclareLaunchArgument(
     name='use_robot_state_pub',
     default_value='True',
@@ -79,19 +74,11 @@ def generate_launch_description():
     executable='bobik_bridge',
     name='bobik_bridge')
 
-  # Publish the joint state values for the non-fixed joints in the URDF file.
-  start_joint_state_publisher_cmd = Node(
-    condition=UnlessCondition(gui),
-    package='joint_state_publisher',
-    executable='joint_state_publisher',
-    name='joint_state_publisher')
-
-  # A GUI to manipulate the joint state values
-  #start_joint_state_publisher_gui_node = Node(
-  #  condition=IfCondition(gui),
-  #  package='joint_state_publisher_gui',
-  #  executable='joint_state_publisher_gui',
-  #  name='joint_state_publisher_gui')
+  # Bobik high level skills
+  start_bobik_robot_node = Node(
+    package='bobik_robot',
+    executable='bobik_robot',
+    name='bobik_robot')
 
   # Subscribe to the joint states of the robot, and publish the 3D pose of each link.
   start_robot_state_publisher_cmd = Node(
@@ -131,24 +118,27 @@ def generate_launch_description():
       'autostart': 'True',
     }.items())
 
+  start_rosbridge_server_cmd = IncludeLaunchDescription(
+    AnyLaunchDescriptionSource(os.path.join(FindPackageShare(package='rosbridge_server').find('rosbridge_server'), 'launch/rosbridge_websocket_launch.xml')),
+    launch_arguments = {
+    }.items())
 
   # Create the launch description and populate
   ld = LaunchDescription()
    # Declare the launch options
   ld.add_action(declare_urdf_model_path_cmd)
   ld.add_action(declare_rviz_config_file_cmd)
-  # ld.add_action(declare_use_joint_state_publisher_cmd)
   ld.add_action(declare_use_robot_state_pub_cmd)  
   ld.add_action(declare_use_rviz_cmd) 
   ld.add_action(declare_use_sim_time_cmd)
 
   # Add any actions
   ld.add_action(start_bobik_bridge_node)
-  # ld.add_action(start_joint_state_publisher_cmd)
-  # ld.add_action(start_joint_state_publisher_gui_node)
+  ld.add_action(start_bobik_robot_node)
   ld.add_action(start_robot_state_publisher_cmd)
   ld.add_action(start_localization_node)
   ld.add_action(start_ros2_navigation_cmd)
+  ld.add_action(start_rosbridge_server_cmd)
   ld.add_action(start_rviz_cmd)
  
   return ld
