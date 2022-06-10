@@ -14,6 +14,8 @@ classDiagram
     bobik_bridge --|> bobik_driver
     bobik_driver --|> bobik_arduino
     rosbridge_server <|-- bobik_web
+    rosbridge_server --|> bobik_robot
+    bobik_interfaces --|> bobik_robot
 
     class bobik_robot {
         [workstation, Python]
@@ -44,6 +46,10 @@ classDiagram
     class bobik_web {
         [android, reactjs]
         converts ZeroMq to ROS2 topics
+    }
+    class bobik_interfaces {
+        [ros2]
+        actions & services definitions
     }
 
 
