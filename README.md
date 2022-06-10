@@ -12,6 +12,7 @@ Bobik's resources are split accros multiple git repositories.
 classDiagram
     bobik_robot --|> bobik_bridge
     bobik_bridge --|> bobik_driver
+    bobik_robot --|> bobik_driver
     bobik_driver --|> bobik_arduino
     rosbridge_server <|-- bobik_web
     rosbridge_server --|> bobik_robot
