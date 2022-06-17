@@ -58,7 +58,7 @@ classDiagram
 
 ## Install ROS2
 ```
-sudo aptitude install ros-foxy-robot-localization
+sudo aptitude install ros-foxy-robot-localization ros-foxy-wiimote? libcwiid-dev?
 ```
 
 ## Setup WiFi
@@ -71,6 +71,33 @@ Bacause of [bug in rviz to display cylinders](https://answers.ros.org/question/3
 ```
 echo 'export LC_NUMERIC="en_US.UTF-8"' >>~/.bashrc
 ```
+
+## Web Hosting
+
+Apache HTTPD server is assumed.
+Copy to 
+- /etc/ssl/private/server.key
+- /etc/ssl/certs/server.crt
+- /etc/apache2/sites-available/010-bobik.conf
+
+Create symlink
+```
+sudo ln -s /etc/apache2/sites-available/010-bobik.conf /etc/apache2/sites-enabled
+```
+
+```
+sudo a2enmod ssl
+```
+
+```
+npm run build
+cp build/* /var/www/vhosts/bobik/
+```
+
+## wiimote
+https://git.fh-muenster.de/ns926159/joystick_drivers.git
+clear && colcon build --packages-select wiimote_msgs
+clear && colcon build --packages-select wiimote
 
 ## Mesh edits
 Use Meshalab to reduce number of triangles. Filters > Remeshing, Simplification and Reconstruction > Simplification: Quadratic Edge Collapse Decimation.

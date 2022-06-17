@@ -119,8 +119,11 @@ def generate_launch_description():
     }.items())
 
   start_rosbridge_server_cmd = IncludeLaunchDescription(
-    AnyLaunchDescriptionSource(os.path.join(FindPackageShare(package='rosbridge_server').find('rosbridge_server'), 'launch/rosbridge_websocket_launch.xml')),
+    AnyLaunchDescriptionSource(os.path.join(FindPackageShare(package='bobik_robot').find('bobik_robot'), 'launch/rosbridge_websocket_launch.xml')),
     launch_arguments = {
+      'ssl': 'true',
+      'certfile': '/home/honza/projects/bobik/bobik_web/cert/server.crt',
+      'keyfile': '/home/honza/projects/bobik/bobik_web/cert/server.key'
     }.items())
 
   # Create the launch description and populate
@@ -140,5 +143,5 @@ def generate_launch_description():
   ld.add_action(start_ros2_navigation_cmd)
   ld.add_action(start_rosbridge_server_cmd)
   ld.add_action(start_rviz_cmd)
- 
+
   return ld
