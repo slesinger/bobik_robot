@@ -12,10 +12,14 @@ Bobik's resources are split accros multiple git repositories.
 classDiagram
     bobik_robot --|> bobik_bridge
     bobik_bridge --|> bobik_driver
+    bobik_robot --|> bobik_driver
     bobik_driver --|> bobik_arduino
+    rosbridge_server <|-- bobik_web
+    rosbridge_server --|> bobik_robot
+    bobik_interfaces --|> bobik_robot
 
     class bobik_robot {
-        [workstation]
+        [workstation, Python]
         ROS2
         - launch
         - configuration
@@ -25,16 +29,30 @@ classDiagram
         Nav2()
     }
     class bobik_bridge {
-        [workstation]
+        [workstation, C++]
         converts ZeroMq to ROS2 topics
     }
     class bobik_driver {
-        [Jetson]
+        [Jetson, C++]
         ttyTHS1 <-> Arduino
     }
     class bobik_arduino {
         most of low level control and sensing
     }
+
+    class rosbridge_server {
+        [workstation, ros2]
+        roslib websocket from Android
+    }
+    class bobik_web {
+        [android, reactjs]
+        converts ZeroMq to ROS2 topics
+    }
+    class bobik_interfaces {
+        [ros2]
+        actions & services definitions
+    }
+
 
 
 ```
