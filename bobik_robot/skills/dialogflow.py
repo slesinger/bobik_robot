@@ -111,7 +111,7 @@ class DialogFlow:
         while True:
             chunk = audio_buffer[start:start+UDP_CHUNK]
             udp.sendto(chunk, ('127.0.0.1', 7081))
-            time.sleep(0.02)
+            time.sleep(0.01)
             start += UDP_CHUNK
             if start >= len(audio_buffer):
                 break

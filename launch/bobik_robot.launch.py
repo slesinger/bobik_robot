@@ -89,16 +89,7 @@ def generate_launch_description():
     'robot_description': Command(['xacro ', urdf_model])}],
     arguments=[default_urdf_model_path])
 
-  # start Nav2 localization
-  start_localization_node = Node(
-    package='robot_localization',
-    executable='ekf_node',
-    name='ekf_filter_node',
-    output='screen',
-    parameters=[os.path.join(pkg_share, 'config/ekf.yaml'), {'use_sim_time': LaunchConfiguration('use_sim_time')}]
-  )
-
-  # Launch RViz
+  # RViz
   start_rviz_cmd = Node(
     condition=IfCondition(use_rviz),
     package='rviz2',
@@ -107,6 +98,16 @@ def generate_launch_description():
     output='screen',
     arguments=['-d', rviz_config_file])
 
+  # Nav2 EKF
+  start_ekf_node = Node(
+    package='robot_localization',
+    executable='ekf_node',
+    name='ekf_filter_node',
+    output='screen',
+    parameters=[os.path.join(pkg_share, 'config/ekf.yaml'), {'use_sim_time': LaunchConfiguration('use_sim_time')}]
+  )
+
+  # Nav2
   start_ros2_navigation_cmd = IncludeLaunchDescription(
     PythonLaunchDescriptionSource(os.path.join(FindPackageShare(package='nav2_bringup').find('nav2_bringup'), 'launch/bringup_launch.py')),
     launch_arguments = {
@@ -118,6 +119,7 @@ def generate_launch_description():
       'autostart': 'True',
     }.items())
 
+  # ROS Bridge for mobile phone controller with roslib
   start_rosbridge_server_cmd = IncludeLaunchDescription(
     AnyLaunchDescriptionSource(os.path.join(FindPackageShare(package='bobik_robot').find('bobik_robot'), 'launch/rosbridge_websocket_launch.xml')),
     launch_arguments = {
@@ -131,15 +133,15 @@ def generate_launch_description():
    # Declare the launch options
   ld.add_action(declare_urdf_model_path_cmd)
   ld.add_action(declare_rviz_config_file_cmd)
-  ld.add_action(declare_use_robot_state_pub_cmd)  
-  ld.add_action(declare_use_rviz_cmd) 
+  ld.add_action(declare_use_robot_state_pub_cmd)
+  ld.add_action(declare_use_rviz_cmd)
   ld.add_action(declare_use_sim_time_cmd)
 
   # Add any actions
   ld.add_action(start_bobik_bridge_node)
   ld.add_action(start_bobik_robot_node)
   ld.add_action(start_robot_state_publisher_cmd)
-  ld.add_action(start_localization_node)
+  ld.add_action(start_ekf_node)
   ld.add_action(start_ros2_navigation_cmd)
   ld.add_action(start_rosbridge_server_cmd)
   ld.add_action(start_rviz_cmd)

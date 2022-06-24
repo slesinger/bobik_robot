@@ -112,11 +112,6 @@ npm run build
 cp build/* /var/www/vhosts/bobik/
 ```
 
-## wiimote
-https://git.fh-muenster.de/ns926159/joystick_drivers.git
-clear && colcon build --packages-select wiimote_msgs
-clear && colcon build --packages-select wiimote
-
 ## Mesh edits
 Use Meshalab to reduce number of triangles. Filters > Remeshing, Simplification and Reconstruction > Simplification: Quadratic Edge Collapse Decimation.
 
@@ -134,3 +129,16 @@ ros2 run teleop_twist_keyboard teleop_twist_keyboard
 
 # Nav2
 ros2 run tf2_ros static_transform_publisher "0" "0" "0" "0" "0" "0" "base_link" "odom"
+
+# Operation
+
+## Practical snippets
+```
+rte /odom | grep -v '\- 0.0'
+```
+#### TF
+```
+ros2 run tf2_ros tf2_echo odom map
+ros2 run tf2_tools view_frames.py
+rqt_graph
+```
