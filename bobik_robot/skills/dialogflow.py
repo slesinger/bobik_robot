@@ -1,9 +1,12 @@
 from google.cloud import dialogflow_v2beta1 as dialogflow
+from mpd import MPDClient, ConnectionError
 from google.cloud import texttospeech
 import socket
 import time
 from threading import Thread
 import pyogg
+import pyaudio
+import random
 
 UDP_CHUNK = 1024
 
@@ -17,7 +20,12 @@ class DialogFlow:
         self.session_client = dialogflow.SessionsClient()
         self.session = self.session_client.session_path(project_id, session_id)
 
+        self.mpd_client = MPDClient()
+        self.mpd_client.timeout = 10
+        self.mpd_client.idletimeout = None
+
         self.tts_client = texttospeech.TextToSpeechClient()
+        self.audio = None
 
 
     def detect_intent(self, text):
@@ -35,17 +43,25 @@ class DialogFlow:
         )
         end = time.time()
 
+        self.audio = response.output_audio
         if response.output_audio[:3] == b'RIF':
-            new_thread = Thread(target=self.stream_pcm_s16le24k_audio,args=(response.output_audio,))
-            new_thread.start()
-        if response.output_audio[:3] == b'Ogg':
-            new_thread = Thread(target=self.stream_opus_audio_48k,args=(response.output_audio,))
-            new_thread.start()
+            self.audio_type = 'wav'
+            # new_thread = Thread(target=self.stream_pcm_s16le24k_audio,args=(response.output_audio,))
+            # new_thread.start()
+        elif response.output_audio[:3] == b'Ogg':
+            # MPD is not able to play Opus
+            self.audio_type = 'opus'
+            # new_thread = Thread(target=self.stream_opus_audio_48k,args=(response.output_audio,))
+            # new_thread.start()
+        else:
+            self.audio_type = 'mp3'
+
+        self.mpd_play()
 
         return {
             'reply': response.query_result.fulfillment_text, 
             'confidence': response.query_result.intent_detection_confidence,
-            'audio_size': len(response.output_audio),
+            'audio_size': len(self.audio),
             'df_time': int((end - start) * 1000),
             'action': response.query_result.action,
             'action_params': response.query_result.parameters
@@ -66,19 +82,47 @@ class DialogFlow:
         )
         end = time.time()
 
+        self.audio = response.output_audio
         if response.output_audio[:3] == b'RIF':
-            new_thread = Thread(target=self.stream_pcm_s16le24k_audio,args=(response.output_audio,))
-            new_thread.start()
-        if response.output_audio[:3] == b'Ogg':
-            new_thread = Thread(target=self.stream_opus_audio_48k,args=(response.output_audio,))
-            new_thread.start()
+            self.audio_type = 'wav'
+        elif response.output_audio[:3] == b'Ogg':
+            print('warn: MPD is not able to play Opus')
+            self.audio_type = 'opus'
+        else:
+            self.audio_type = 'mp3'
+
+        self.mpd_play()
 
         return {
             'reply': response.query_result.fulfillment_text, 
             'confidence': response.query_result.intent_detection_confidence,
             'audio_size': len(response.output_audio),
-            'df_time': int((end - start) * 1000)
+            'df_time': int((end - start) * 1000),
+            'audio': response.output_audio
         }
+
+    def mpd_play(self):
+        try:
+            self.mpd_client.status()
+        except ConnectionError:
+            print('Reconnecting to MPD')
+            self.mpd_client.connect("bobik", 6600)
+            self.mpd_client.single(1)
+            self.mpd_client.add('http://ha.doma:9547/audio')
+
+        self.mpd_client.play(0)
+
+
+    def mpd_stop(self):
+        try:
+            self.mpd_client.status()
+        except ConnectionError:
+            print('Reconnecting to MPD')
+            self.mpd_client.connect("bobik", 6600)
+            self.mpd_client.single(1)
+            self.mpd_client.add('http://ha.doma:9547/audio')
+
+        self.mpd_client.stop()
 
 
     def tts_play(self, text):
@@ -92,43 +136,14 @@ class DialogFlow:
         audio_config = texttospeech.AudioConfig(
             speaking_rate=0.85,
             pitch=-12.0,
-            audio_encoding=texttospeech.AudioEncoding.OGG_OPUS
+            audio_encoding=texttospeech.AudioEncoding.MP3
         )
         response = self.tts_client.synthesize_speech(
             input=synthesis_input, voice=voice, audio_config=audio_config
         )
 
-        new_thread = Thread(target=self.stream_opus_audio_48k,args=(response.audio_content,))
-        new_thread.start()
+        self.audio = response.audio_content
+        self.audio_type = 'mp3'
+        self.mpd_play()
         return
-
-
-    # /usr/bin/ffplay rtp://192.168.1.2:7081 -f s16le -ar 24000 -nodisp -loglevel quiet
-    def stream_pcm_s16le24k_audio(self, audio_buffer): #TODO play in new thread
-        """Streams a plain audio buffer over UDP."""
-        udp = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        start = 44
-        while True:
-            chunk = audio_buffer[start:start+UDP_CHUNK]
-            udp.sendto(chunk, ('127.0.0.1', 7081))
-            time.sleep(0.01)
-            start += UDP_CHUNK
-            if start >= len(audio_buffer):
-                break
-
-    # /usr/bin/ffplay rtp://192.168.1.2:7081 -f s16le -ar 48000 -nodisp -loglevel quiet
-    # gst-launch-0.10 udpsrc port=7081 ! audio/x-raw-int, endianness="(int)1234", signed="(boolean)true", width="(int)16", depth="(int)16", rate="(int)48000", channels="(int)1" ! alsasink
-    def stream_opus_audio_48k(self, audio_buffer): #TODO play in new thread
-        """Decode OGG Opus and streams over UDP."""
-        opus_file = pyogg.OpusFile(audio_buffer, len(audio_buffer))
-        decoded_pcm = opus_file.buffer
-        udp = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        start = 0
-        while True:
-            mv = memoryview(decoded_pcm).tobytes()
-            chunk = mv[start:start+UDP_CHUNK]
-            udp.sendto(chunk, ('192.168.1.21', 7081))
-            time.sleep(0.01)
-            start += UDP_CHUNK
-            if start >= len(decoded_pcm):
-                break
+        

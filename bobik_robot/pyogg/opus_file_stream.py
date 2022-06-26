@@ -5,7 +5,7 @@ from . import opus
 from .pyogg_error import PyOggError
 
 class OpusFileStream:
-    def __init__(self, path):
+    def __init__(self, data: bytes, size: int) -> None:
         """Opens an OggOpus file as a stream.
 
         path should be a string giving the filename of the file to
@@ -17,7 +17,11 @@ class OpusFileStream:
         """ 
         error = ctypes.c_int()
 
-        self.of = opus.op_open_file(ogg.to_char_p(path), ctypes.pointer(error))
+        self.of = opus.op_open_memory(
+            ogg.to_char_p(data),
+            size,
+            ctypes.pointer(error)
+        )
 
         if error.value != 0:
             self.of = None

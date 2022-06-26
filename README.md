@@ -127,6 +127,11 @@ clear && ros2 launch bobik_robot bobik_robot.launch.py
 ros2 run teleop_twist_keyboard teleop_twist_keyboard
 ```
 
+# ROS Bridge
+```
+ros2 launch bobik_robot rosbridge_websocket_launch.xml ssl:=true certfile:=/home/honza/projects/bobik/bobik_web/cert/server.crt keyfile:=/home/honza/projects/bobik/bobik_web/cert/server.key
+```
+
 # Nav2
 ros2 run tf2_ros static_transform_publisher "0" "0" "0" "0" "0" "0" "base_link" "odom"
 
