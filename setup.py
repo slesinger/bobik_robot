@@ -6,6 +6,9 @@ from setuptools import find_packages
 
 package_name = 'bobik_robot'
 
+# !!! If colcon build does not copy files, make sure current dir is ~/ros2_foxy !!!
+
+# data files have format (target, source)
 setup(
     name=package_name,
     version='0.0.1',
@@ -17,6 +20,7 @@ setup(
         (os.path.join('share', package_name, 'launch'), glob('launch/*.xml')),
         (os.path.join('share', package_name, 'config'), glob('config/*')),
         (os.path.join('share', package_name, 'meshes'), glob('meshes/*')),
+        (os.path.join('share', package_name, 'maps'), glob('maps/*')),
         (os.path.join('share', package_name, 'params'), glob('params/*')),
         (os.path.join('share', package_name, 'urdf'), glob('urdf/*')),
         (os.path.join('share', package_name, 'rviz'), glob('rviz/*')),
@@ -25,7 +29,7 @@ setup(
     ],
     install_requires=['setuptools'],
     zip_safe=True,
-    maintainer='honza',
+    maintainer='Honza',
     maintainer_email='slesinger@gmail.com',
     description='Files specific to Bobik robot, containing drived HW interfaces and launch files.',
     license='MIT',

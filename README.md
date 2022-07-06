@@ -76,7 +76,7 @@ classDiagram
 
 ## Install ROS2
 ```
-sudo aptitude install ros-foxy-robot-localization ros-foxy-wiimote? libcwiid-dev?
+sudo aptitude install ros-foxy-robot-localization ros-foxy-imu-tools 
 ```
 
 ## Setup WiFi
@@ -112,6 +112,12 @@ npm run build
 cp build/* /var/www/vhosts/bobik/
 ```
 
+### Bobik_robot Build
+```
+cd ~/ros2_foxy
+clear && colcon --log-level INFO build --packages-select bobik_robot
+```
+
 ## Mesh edits
 Use Meshalab to reduce number of triangles. Filters > Remeshing, Simplification and Reconstruction > Simplification: Quadratic Edge Collapse Decimation.
 
@@ -140,10 +146,17 @@ ros2 run tf2_ros static_transform_publisher "0" "0" "0" "0" "0" "0" "base_link" 
 ## Practical snippets
 ```
 rte /odom | grep -v '\- 0.0'
+ros2 run nav2_map_server map_saver_cli -f ~/ros2_foxy/src/bobik_robot/maps/place --ros-args -p save_map_timeout:=10000
 ```
 #### TF
 ```
 ros2 run tf2_ros tf2_echo odom map
 ros2 run tf2_tools view_frames.py
 rqt_graph
+```
+
+### Move
+```
+ros2 topic pub -r 20 -t 100 /cmd_vel geometry_msgs/msg/Twist '{linear: {x: 0.4, y: 0.0, z: 0.0}, angular: {x: 0.0, y: 0.0, z: 0.0}}'
+ros2 topic pub -r 20 -t 100 /cmd_vel geometry_msgs/msg/Twist '{linear: {x: -0.2, y: 0.3464, z: 0.0}, angular: {x: 0.0, y: 0.0, z: 0.0}}'
 ```
