@@ -118,7 +118,12 @@ cd ~/ros2_foxy
 clear && colcon --log-level INFO build --packages-select bobik_robot
 ```
 
-## Mesh edits
+## URDF
+
+### Jupiter Live Editor
+https://github.com/ihuicatl/jupyterlab-urdf
+
+### Mesh edits
 Use Meshalab to reduce number of triangles. Filters > Remeshing, Simplification and Reconstruction > Simplification: Quadratic Edge Collapse Decimation.
 
 No idea how to export textures with Collada dae files. Alternative is set URDF ```<material texture="medvidek.jpg" />``` in ```<visual>```. No UV mapping is possible, though.
