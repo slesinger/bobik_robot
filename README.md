@@ -113,6 +113,21 @@ cp build/* /var/www/vhosts/bobik/
 ```
 
 ### Bobik_robot Build
+
+Recommended to use Bobik build script
+```
+Usage:
+./bobik_build.sh robot
+./bobik_build.sh bridge
+./bobik_build.sh arduino
+./bobik_build.sh web
+./bobik_build.sh interfaces
+./bobik_build.sh description
+./bobik_build.sh gazebo
+```
+
+The ```bobik_build.sh``` has to be symlinked from ```~/ros2_foxy/src/bobik_robot/scripts/bobik_build.sh``` to ```~/ros2_foxy/bobik_build.sh```.
+
 ```
 cd ~/ros2_foxy
 clear && colcon --log-level INFO build --packages-select bobik_robot

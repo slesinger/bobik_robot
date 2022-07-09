@@ -6,18 +6,41 @@ ekf_filter_node:
 # frequency specified here, regardless of whether it receives more measurements. Defaults to 30 if unspecified.
         frequency: 20.0
 
+# The period, in seconds, after which we consider a sensor to have timed out. In this event, we carry out a predict
+# cycle on the EKF without correcting it. This parameter can be thought of as the minimum frequency with which the
+# filter will generate new output. Defaults to 1 / frequency if not specified.
+        sensor_timeout: 0.1
+
 # ekf_localization_node and ukf_localization_node both use a 3D omnidirectional motion model. If this parameter is
 # set to true, no 3D information will be used in your state estimate. Use this if you are operating in a planar
 # environment and want to ignore the effect of small variations in the ground plane that might otherwise be detected
 # by, for example, an IMU. Defaults to false if unspecified.
         two_d_mode: true
 
-# Whether to publish the acceleration state. Defaults to false if unspecified.
-        publish_acceleration: true
+# Debug settings. Not for the faint of heart. Outputs a ludicrous amount of information to the file specified by
+# debug_out_file. I hope you like matrices! Please note that setting this to true will have strongly deleterious
+# effects on the performance of the node. Defaults to false if unspecified.
+        debug: false
+
+# Defaults to "robot_localization_debug.txt" if unspecified. Please specify the full path.
+        debug_out_file: /tmp/robot_localization_debug.txt
 
 # Whether to broadcast the transformation over the /tf topic. Defaultsto true if unspecified.
         publish_tf: true
 
+# Whether to publish the acceleration state. Defaults to false if unspecified.
+        publish_acceleration: true
+
+
+# REP-105 (http://www.ros.org/reps/rep-0105.html) specifies four principal coordinate frames: base_link, odom, map, and
+# earth. base_link is the coordinate frame that is affixed to the robot. Both odom and map are world-fixed frames.
+# The robot's position in the odom frame will drift over time, but is accurate in the short term and should be
+# continuous. The odom frame is therefore the best frame for executing local motion plans. The map frame, like the odom
+# frame, is a world-fixed coordinate frame, and while it contains the most globally accurate position estimate for your
+# robot, it is subject to discrete jumps, e.g., due to the fusion of GPS data or a correction from a map-based
+# localization node. The earth frame is used to relate multiple map frames by giving them a common reference frame.
+# ekf_localization_node and ukf_localization_node are not concerned with the earth frame.
+# Here is how to use the following settings:
 # 1. Set the map_frame, odom_frame, and base_link frames to the appropriate frame names for your system.
 #     1a. If your system does not have a map_frame, just remove it, and make sure "world_frame" is set to the value of odom_frame.
 # 2. If you are fusing continuous position data such as wheel encoder odometry, visual odometry, or IMU data, set "world_frame"
@@ -32,9 +55,68 @@ ekf_filter_node:
         base_link_frame: base_link  # Defaults to "base_link" ifunspecified
         world_frame: odom           # Defaults to the value ofodom_frame if unspecified
 
+# The filter accepts an arbitrary number of inputs from each input message type (nav_msgs/Odometry,
+# geometry_msgs/PoseWithCovarianceStamped, geometry_msgs/TwistWithCovarianceStamped,
+# sensor_msgs/Imu). To add an input, simply append the next number in the sequence to its "base" name, e.g., odom0,
+# odom1, twist0, twist1, imu0, imu1, imu2, etc. The value should be the topic name. These parameters obviously have no
+# default values, and must be specified.
         odom0: odom
+# Each sensor reading updates some or all of the filter's state. These options give you greater control over which
+# values from each measurement are fed to the filter. For example, if you have an odometry message as input, but only
+# want to use its Z position value, then set the entire vector to false, except for the third entry. The order of the
+# values is x, y, z, roll, pitch, yaw, vx, vy, vz, vroll, vpitch, vyaw, ax, ay, az. Note that not some message types
+# do not provide some of the state variables estimated by the filter. For example, a TwistWithCovarianceStamped message
+# has no pose information, so the first six values would be meaningless in that case. Each vector defaults to all false
+# if unspecified, effectively making this parameter required for each sensor.
         odom0_config: [true,  true,  false,
                        false, false, true,
                        false, false, false,
                        false, false, false,
                        false, false, false]
+
+        #        [x_pos T , y_pos T  , z_pos F,
+                # roll F  , pitch F  , yaw T,
+                # x_vel   , y_vel    , z_vel,
+                # roll_vel, pitch_vel, yaw_vel,
+                # x_accel , y_accel  , z_accel]
+
+# [ADVANCED] When the node starts, if this parameter is true, then the first measurement is treated as a "zero point"
+# for all future measurements. While you can achieve the same effect with the differential paremeter, the key
+# difference is that the relative parameter doesn't cause the measurement to be converted to a velocity before
+# integrating it. If you simply want your measurements to start at 0 for a given sensor, set this to true.
+        odom0_relative: false
+
+# [ADVANCED] If your data is subject to outliers, use these threshold settings, expressed as Mahalanobis distances, to
+# control how far away from the current vehicle state a sensor measurement is permitted to be. Each defaults to
+# numeric_limits<double>::max() if unspecified. It is strongly recommended that these parameters be removed if not
+# required. Data is specified at the level of pose and twist variables, rather than for each variable in isolation.
+# For messages that have both pose and twist data, the parameter specifies to which part of the message we are applying
+# the thresholds.
+        odom0_pose_rejection_threshold: 5.0
+        odom0_twist_rejection_threshold: 1.0
+
+
+        imu0: imu
+        imu0_config: [false, false, false,
+                      true,  true,  true,
+                      false, false, false,
+                      true,  true,  true,
+                      false,  false,  false]
+
+        #        [x_pos   , y_pos    , z_pos,
+        #         roll    , pitch    , yaw,
+        #         x_vel   , y_vel    , z_vel,
+        #         roll_vel, pitch_vel, yaw_vel,
+        #         x_accel T, y_accel  T, z_accelT]
+        
+        imu0_nodelay: false
+        imu0_differential: false
+        imu0_relative: true
+        imu0_queue_size: 7
+        imu0_pose_rejection_threshold: 0.8                 # Note the difference in parameter names
+        imu0_twist_rejection_threshold: 0.8                #
+        imu0_linear_acceleration_rejection_threshold: 0.8  #
+
+# [ADVANCED] Some IMUs automatically remove acceleration due to gravity, and others don't. If yours doesn't, please set
+# this to true, and *make sure* your data conforms to REP-103, specifically, that the data is in ENU frame.
+        imu0_remove_gravitational_acceleration: true
