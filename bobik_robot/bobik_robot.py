@@ -100,7 +100,7 @@ async def api_get_audio(request):
     else:
         return web.Response(status=204)
 
-async def main():
+async def main2():
     global node
     node = BobikRobot()
     app = web.Application()
@@ -113,5 +113,5 @@ async def main():
         ros2_task(app)
     )
 
-if __name__ == '__main__':
-    asyncio.run(main())
+# if __name__ == '__main__':  # uncommenting this issues "sys:1: RuntimeWarning: coroutine 'main' was never awaited" when run as ros2 run
+asyncio.run(main2())

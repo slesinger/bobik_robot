@@ -108,6 +108,9 @@ def generate_launch_description():
   )
 
   # Nav2
+  # | /opt/ros/foxy/share/nav2_bringup/launch/bringup_launch.py
+  # |--> /opt/ros/foxy/share/nav2_bringup/launch/localization_launch.py
+  # |--> /opt/ros/foxy/share/nav2_bringup/launch/navigation_launch.py
   start_ros2_navigation_cmd = IncludeLaunchDescription(
     PythonLaunchDescriptionSource(os.path.join(FindPackageShare(package='nav2_bringup').find('nav2_bringup'), 'launch/bringup_launch.py')),
     launch_arguments = {
@@ -140,10 +143,10 @@ def generate_launch_description():
   # Add any actions
   ld.add_action(start_bobik_bridge_node)
   ld.add_action(start_bobik_robot_node)
+  ld.add_action(start_rosbridge_server_cmd)
   ld.add_action(start_robot_state_publisher_cmd)
+  ld.add_action(start_rviz_cmd)
   ld.add_action(start_ekf_node)
   ld.add_action(start_ros2_navigation_cmd)
-  ld.add_action(start_rosbridge_server_cmd)
-  ld.add_action(start_rviz_cmd)
 
   return ld

@@ -162,6 +162,9 @@ ros2 run tf2_ros static_transform_publisher "0" "0" "0" "0" "0" "0" "base_link" 
 ```
 rte /odom | grep -v '\- 0.0'
 ros2 run nav2_map_server map_saver_cli -f ~/ros2_foxy/src/bobik_robot/maps/place --ros-args -p save_map_timeout:=10000
+
+# SLAM Toolbox - Serialize Map does not work
+ros2 service call /slam_toolbox/serialize_map "slam_toolbox/SerializePoseGraph" "{'filename': 'husky_serialize'}"
 ```
 #### TF
 ```
