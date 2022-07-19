@@ -42,12 +42,15 @@ class BobikRobot(Node):
                 func = getattr(dialogflow_actions, reply.get('action'))
                 if reply.get('reply'):
                     self.get_logger().info('Invoking async action: %s ' % reply.get('action'))
-                    new_thread = Thread(target=func,args=(self, reply.get('action_params'),))
+                    self.get_logger().info('Exec action params: %s ' % reply.get('action_params', {}))
+                    new_thread = Thread(target=func,args=(self, reply.get('action_params', {}),))
                     new_thread.start()
                 else:
                     self.get_logger().info('Exec action: %s ' % reply.get('action'))
+                    self.get_logger().info('Action params: %s ' % reply.get('action_params', {}))
+
                     event_reply = self.df.detect_event(
-                        event=func(reply.get('action_params'))
+                        event=func(node, reply.get('action_params', {}))
                     )
                     response.reply = event_reply.get('reply')
                     self.get_logger().info('Human query on event: %s >> %s (conf: %d, size: %d, millis %d)' % (query, event_reply.get('reply'), event_reply.get('confidence'), event_reply.get('audio_size'), event_reply.get('df_time')))
