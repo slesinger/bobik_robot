@@ -183,3 +183,8 @@ rqt_graph
 ros2 topic pub -r 20 -t 100 /cmd_vel geometry_msgs/msg/Twist '{linear: {x: 0.4, y: 0.0, z: 0.0}, angular: {x: 0.0, y: 0.0, z: 0.0}}'
 ros2 topic pub -r 20 -t 100 /cmd_vel geometry_msgs/msg/Twist '{linear: {x: -0.2, y: 0.3464, z: 0.0}, angular: {x: 0.0, y: 0.0, z: 0.0}}'
 ```
+
+### Markers (does not work)
+```
+ros2 topic pub -r 20 -t 100 /visualization_marker visualization_msgs/msg/Marker "{header: {frame_id: 'map', stamp: {sec: `date +%s`, nanosec: 0}}, pose: { position: {x: 1.4, y: 0.0, z: 0.0}}, scale: {x: 0.5, y: 0.5, z: 0.5}, color: {r: 0.9, g: 0.5, b: 0.5}, action: 0, type: 1, ns: 'my_namespace', id: 0, lifetime: 1}"
+```

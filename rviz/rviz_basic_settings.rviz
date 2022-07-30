@@ -165,7 +165,7 @@ Visualization Manager:
         Durability Policy: Volatile
         History Policy: Keep Last
         Reliability Policy: Reliable
-        Value: /odom
+        Value: /odometry/filtered
       Value: true
     - Alpha: 1
       Autocompute Intensity Bounds: true
