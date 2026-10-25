@@ -213,13 +213,23 @@ The firmware's internal frame has Y pointing right, which is the opposite of REP
 5. **IMU (MPU-9150) has been discontinued for years**, and its data was not usable in the EKF.
 6. **WiFi latency.** A shared 5 GHz home AP with about 6 clients is not suitable for low-latency control loops over the network. **[H]**
 
-## 6. Open questions for the HW review
+## 6. Open questions (grouped by topic, answered one topic at a time)
 
-- Exact motor models, voltages, gear ratios and gear types (drive and steering).
-- Steering pulley tooth counts (motor pulley vs. the 176T pulley?).
-- Which supply rail feeds the motors: battery direct, or a step-down?
-- Torso lift: NEMA 17 driver (TMC2130 per schema?), lead screw pitch, travel range, end-stop. Is anything mounted for the head?
-- Real total mass, and the height of the torso.
-- Wheel-tick pin assignment (README vs. code mismatch).
-- Is the MPU-9150 still mounted, and where is it (URDF says (−0.10, 0, 0.16))?
+**Caster mechanics** (answer when the caster is taken apart):
+- Drive and steering motor models, voltages and gear ratios.
+- Bevel gear ratio, and the steering pulley tooth counts (motor pulley vs. the 176T pulley?).
+- Are steering end-stop switches installed?
+
+**Power:**
+- Which supply rail feeds the motors: battery direct, or a step-down? (Honza will draw a diagram.)
+
+**Torso:**
+- NEMA 17 driver, lead screw type and pitch, travel range, end-stop. Total torso height.
+
+**Sensor placement and body** (can be measured with a tape measure):
+- Is the MPU-9150 still mounted, and where (URDF says (−0.10, 0, 0.16))?
 - Lidar mounting position (URDF: (0.12, 0.13, 0.2325)).
+- Real total mass.
+
+**Resolve in code** (no question for Honza):
+- Wheel-tick pin assignment: README and `robot_config.h` disagree. Verify on the bench in Phase 0.
