@@ -73,7 +73,8 @@ Each phase ends with something visible.
 
 ### Phase 1 – Platform refresh
 
-- **Workstation:** latest Ubuntu LTS + latest ROS 2 LTS. Workspace layout, build script, and a simple simulation of the swerve base (Gazebo) for testing without hardware.
+- **Workstation:** latest Ubuntu LTS + latest ROS 2 LTS. Workspace layout, build script.
+- **Test and simulation environment, layers 1–3** (see section 3). It is set up early, so all later phases can be developed and checked without the robot.
 - **TK1:** Debian armhf + mainline kernel on an SD card. Verify:
   - Ethernet
   - WiFi (Intel 7260 / iwlwifi)
@@ -159,7 +160,26 @@ Expected total: about 3,500–7,500 CZK including the optional lidar.
 - Arm and gripper (separate project).
 - Docking station with automatic charging.
 
-## 3. Risks and mitigations
+## 3. Test and simulation environment
+
+Physical testing is slow, so every software change should first pass on the workstation without the robot. There are several layers, from fast and cheap to slow and realistic. All layers use the same interfaces as the real robot, so the code under test is the production code.
+
+| Layer | What runs | What it is good for |
+|---|---|---|
+| **1. Unit tests** (C++ GoogleTest, pytest) | Kinematics, steering limit/flip, odometry, protocol encode/decode, run on the host and in GitHub Actions on every push | Logic bugs. Runs in seconds |
+| **2. Firmware on the host** (PlatformIO `native` env) | The real Arduino control code, compiled for the PC against a fake HAL with a simple plant model: DC motor + gearbox inertia, deadband, belt backlash, AS5048A noise, missed IR edges | Tuning the steering and wheel loops without reflashing |
+| **3. Fake robot** (`bobik_fake_hw`) | A drop-in replacement for `bobik_driver` that speaks the same ZeroMQ protocol and simulates casters, IMU, lidar scans and Kinect frames. Everything above it (`bobik_base`, navigation, web, voice) runs unchanged | End-to-end tests of the whole workstation stack. Also lets the TK1 ↔ workstation link be tested with injected latency and packet loss |
+| **4. Gazebo simulation** (gz + ros_gz) | The URDF from the CAD dimensions with 3 swerve casters, a lidar with XV-11 characteristics (5 Hz, 360 pts, noise), and a depth camera with Kinect characteristics, in a world built from the saved home map (`maps/place.pgm`) | Developing mapping, navigation to named places, VLM and voice commands |
+| **5. Record and replay** | Raw logs or rosbags recorded on the real robot, replayed into layers 1–4 | Regression tests with real data, and calibrating the simulation against reality |
+
+Principles:
+- The simulation is deliberately *not ideal*. It uses the measured errors (rear caster slip, missed ticks, steering lag), so code that works in simulation has a good chance on the robot.
+- A switch selects real or simulated hardware. The rest of the stack does not know the difference.
+- Scenario tests (for example "go to kitchen" in Gazebo, run headless) are added to CI once Phase 5 starts.
+
+Order: layers 1 and 3 in Phase 1–2, layer 4 by Phase 4, layer 2 together with the firmware rewrite, and layer 5 from the first real test drives.
+
+## 4. Risks and mitigations
 
 | Risk | Mitigation |
 |---|---|
@@ -169,7 +189,7 @@ Expected total: about 3,500–7,500 CZK including the optional lidar.
 | Budget overrun | Phase 3 parts are bought in priority order: drivers, encoders, IMU, hub, then lidar |
 | Battery health after 3 years of storage | Check the cell voltages and the BMS in Phase 0, and run on mains power by default |
 
-## 4. Open decisions
+## 5. Open decisions
 
 - Transport between TK1 and workstation: keep ZeroMQ (simple, proven here) or move to Zenoh, which ROS 2 supports natively through `rmw_zenoh`.
 - Exact motor driver and encoder parts, after the mechanics thread.
