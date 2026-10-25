@@ -1,6 +1,6 @@
 # Bobik Documentation
 
-This is the entry point. The documents below are the maintained source of truth. The original design files (drawio, ods, FreeCAD) stay where they are, and the documents point to them.
+This is the entry point to the AI-maintained documentation. Everything in `docs-ai/` was written by Claude. Honza's original design files (drawio, ods, FreeCAD, PDF) stay in `docs/` and are referenced from here.
 
 | Document | Contents |
 |---|---|
