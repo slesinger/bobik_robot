@@ -11,7 +11,7 @@
 
 ## 1. Overview
 
-Bobik is a home service robot inspired by the Willow Garage PR2 (the PR2 manual is in `docs/pr2_manual_r321.pdf`, and joint names follow PR2 conventions). It has not been driven for about 3 years. **[H]**
+Bobik is a home service robot inspired by the Willow Garage PR2 (the PR2 manual is in `docs/pr2_manual_r321.pdf`, and joint names follow PR2 conventions). It has not been driven for about 3 years. **[H]** It should still power on and drive, but this has to be tested. **[H]**
 
 | Subsystem | Installed today | Notes |
 |---|---|---|

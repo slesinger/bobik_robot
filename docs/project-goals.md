@@ -10,9 +10,10 @@ Bobik was enjoyable to build, but development stalled. Cheap, imprecise hardware
 
 - **Documentation first.** The HW and SW documentation must be accurate and current, so that proposals and new code make sense without frequent correction.
 - **Prefer simple, robust solutions over heavy tuning.** Where cheap hardware is the root cause, a modest HW upgrade is preferred over weeks of software compensation.
-- **Budget:** reasonable, rather lower. A bigger spend is acceptable when the added value is large, or when not having a component would block development.
+- **Budget:** at most 10,000 CZK until the end of 2026. It is spent only where the added value justifies it. Replacing individual parts (motor drivers, encoders, IMU) is fine when it makes sense.
+- **Compute:** keep the Jetson TK1, because new Jetsons are too expensive. The open question is what runs efficiently on the TK1 and what has to run on the workstation.
 - **Partly frozen HW.** The aluminium frame stays. The drive mechanics can be redesigned if there is a better idea. A 3D printer is now available, which most of the robot was built without.
-- **Full SW refresh** is wanted: a current Ubuntu and ROS 2 (or an alternative), and a working Kinect even if it needs a custom driver.
+- **Full SW refresh** is wanted: the latest Ubuntu and ROS 2 the hardware allows, on both the workstation and the Jetson, and a working Kinect even if it needs a custom driver.
 - **Languages:**
   - Jetson low-level code in C++
   - high-level code may be Python
@@ -36,7 +37,7 @@ Bobik was enjoyable to build, but development stalled. Cheap, imprecise hardware
 
 ## Open decisions
 
-- On-board compute: keep the Jetson TK1 (stuck on Ubuntu 14.04), or replace it with something that runs current Ubuntu and ROS 2 natively?
+- Split of work between the Jetson TK1 (32-bit ARMv7, L4T 21.x) and the workstation, and the newest OS/ROS that is realistic on the TK1.
 - Drive mechanics: improvements to the caster drive and steering (motor drivers, encoders, backlash).
 - Depth sensing: keep the Kinect v1 or move to a newer sensor.
 - How navigation for M2 will work.
