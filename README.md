@@ -59,6 +59,8 @@ classDiagram
 
 > Diagram crafted in [live ditor](https://mermaid-js.github.io/mermaid-live-editor)
 # Documentation
+[Hardware](docs/hardware.md) · [Project goals](docs/project-goals.md) · [Plan](docs/plan.md)
+
 [CAD](https://github.com/slesinger/bobik_robot/tree/main/docs/CAD)
 
 [Mechanical](https://github.com/slesinger/bobik_robot/tree/main/docs/mechanical)

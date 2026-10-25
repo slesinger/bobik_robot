@@ -35,9 +35,12 @@ Bobik was enjoyable to build, but development stalled. Cheap, imprecise hardware
 - The robot has WiFi and Ethernet. The home 5 GHz AP is shared with about 6 clients and is not good for low latency, so a fast and stable link must be solved. Options include a dedicated AP or channel, Ethernet when tethered, or moving latency-critical loops onto the robot.
 - The robot can be switched on by arrangement for remote work, such as running builds or flashing the Arduino.
 
+## Decided
+
+- Split of work between TK1 and workstation: a thin ROS-free C++ driver on the TK1 (Debian armhf + mainline kernel), and all ROS 2 / high-level work on the workstation. See [plan.md](plan.md). (2026-10-25)
+
 ## Open decisions
 
-- Split of work between the Jetson TK1 (32-bit ARMv7, L4T 21.x) and the workstation, and the newest OS/ROS that is realistic on the TK1.
 - Drive mechanics: improvements to the caster drive and steering (motor drivers, encoders, backlash).
 - Depth sensing: keep the Kinect v1 or move to a newer sensor.
 - How navigation for M2 will work.
