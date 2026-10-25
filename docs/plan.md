@@ -1,7 +1,7 @@
 # Bobik – Mid-level Plan
 
 > **Status: DRAFT, agreed direction 2026-10-25.**
-> Inputs: [hardware.md](hardware.md) and [project-goals.md](project-goals.md).
+> Inputs: [hardware/](hardware/mechanical.md), [software-legacy.md](software-legacy.md) and [project-goals.md](project-goals.md).
 > Prices are rough estimates (CZK, late 2026) and must be checked before buying.
 
 ## 1. Target architecture
@@ -67,7 +67,7 @@ Each phase ends with something visible.
 - **Back up the TK1 eMMC** image to the workstation before changing anything.
 - Flash the current firmware and run the old stack once.
 - Record a baseline: does it drive, how good or bad is the odometry (square test), and does each sensor work (casters, AS5048A, IR ticks, IMU, XV-11, Kinect).
-- Fix any discrepancies in `hardware.md`. Separate thread: take the drive mechanics apart and measure them, with photos.
+- Fix any discrepancies in the hardware docs. Separate thread: take the drive mechanics apart and measure them, with photos.
 
 **Done when:** the baseline test results are written into `docs/` and the HW doc has no unknowns that block Phase 1.
 
@@ -104,7 +104,7 @@ Each phase ends with something visible.
   - odometry
   - standard topics and TF
   - parameters in YAML instead of `#define`s
-- Updated URDF consistent with `hardware.md` (steering limits, caster positions).
+- Updated URDF consistent with the hardware docs (steering limits, caster positions).
 
 **Done when:** teleop from the keyboard or phone drives the robot, and RViz shows the robot model, the lidar scan and the Kinect point cloud.
 
