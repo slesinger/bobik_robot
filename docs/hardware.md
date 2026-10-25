@@ -5,6 +5,7 @@
 > - **[H]** confirmed by Honza
 > - **[C]** read from code or config (what the software assumes)
 > - **[D]** from design or planning files (drawio, ods, CAD); may never have been built
+> - **[photo]** observed on Honza's photos (2026-10-25), stored in the project files
 > - **[?]** unknown or contradictory, needs checking
 >
 > Please correct anything that is wrong and remove the tag once it is verified on the real robot.
@@ -54,7 +55,9 @@ Each caster can steer and drive independently, like a swerve module. **[H][C]**
 
 **Drive:**
 - Chinese DC motor with a built-in gearbox, mounted vertically. **[H]**
-- It drives the wheel directly through a 90° gear (bevel or crown). **[H]**
+- It drives the wheel directly through a 90° gear. **[H]** Photos show a pair of straight bevel gears onto a horizontal axle. The ratio looks close to 1:1 **[?]**.
+- The motor is held in a 3D-printed (orange) clamp. **[photo]**
+- The motor body is wrapped in aluminium foil and has a ferrite coil on its leads, which suggests EMI suppression. **[photo]**
 - Wheel: the larger size of inline-skate wheel. **[H]** The code uses D = 123 mm and the URDF uses a width of 24 mm. **[C]**
 - Top speed of the robot is about 0.4 m/s. **[H]** The firmware cap is `CASTER_DRIVE_MAX_SPEED 0.4`. **[C]**
 - Motor stall current is about 6 A at 16 V (~90 W). **[D]** (`electrical-schema_v1.drawio`)
@@ -69,6 +72,8 @@ Each caster can steer and drive independently, like a swerve module. **[H][C]**
   - `optimize_rotation()` either uses the target angle or the opposite angle with the drive reversed. It prefers the option with the smaller absolute angle and shorter travel.
   - In practice each caster stays within ±180°, with a bias towards ±90°. **[C]** (`lib/robot/base_move.h`)
   - The URDF joint limit is ±90°. **[C]**
+- The steering belt is a 2GT closed belt, 610 mm long (`2GT-610`), with a tensioner/idler on a 3D-printed holder on threaded rod. The steering motor is also foil-wrapped. **[photo]**
+- **Cable routing:** the steering axis is hollow. The drive motor power and IR sensor cables run through it, which is why rotation must be limited. **[H]**
 - End-stop switches (left/right) are in the electrical design **[D]**. Whether they are installed **[?]**
 
 **Sensors per caster:**
@@ -77,6 +82,10 @@ Each caster can steer and drive independently, like a swerve module. **[H][C]**
 |---|---|---|---|
 | Steering angle (absolute) | AS5048A magnetic encoder (14-bit), magnet on a holder on the rotating part | SPI | CS pins FL=10, FR=11, R=12. MISO 50, MOSI 51, SCK 52. Zero offsets FL=275, FR=355, R=350 raw units (45.5 units/°) **[C]** |
 | Wheel travel | IR slotted optical sensor + 3D-printed code wheel with 120 slots | digital pin, sampled by a ~1.25 kHz timer ISR | 240 edges/rev, ≈1.61 mm/edge. **Single channel, so there is no direction information.** The firmware assumes the commanded direction. **[C]** |
+
+From the photos **[photo]**:
+- The AS5048A sits in a transparent 3D-printed holder on the frame, above the hollow steering axis. The neodymium magnet is on the axis below it. **[H]**
+- The wheel-tick sensor is an optical fork (slotted interrupter) in a grey 3D-printed housing, reading a 3D-printed comb-style code wheel mounted coaxially beside the wheel.
 
 An older electrical note says "AS5048B – read precisely – try better mechanical placement" **[D]**, so the encoder mounting may have been an accuracy issue.
 
@@ -158,8 +167,11 @@ Wire colours (README): yellow = PWM, green/blue = IN, stripe count 1/2/3 = FL/FR
 - UART1 `/dev/ttyTHS1` on J3A2 pins 65 (RX) and 68 (TX).
   - Goes through a 1.8 V ↔ 5 V level shifter, with LV and GND from J3A1 pins 3 and 2.
   - Runs at **19200 baud**. The code comment says "500000 is too much for voltage converter".
-- XV-11 lidar on USB-serial `/dev/ttyUSB0`, 115200 baud.
-- Kinect v1 on USB, through libfreenect.
+- XV-11 lidar: through a USB-serial converter on the Jetson's **micro-USB (USB0) port** **[H]**. Appears as `/dev/ttyUSB0`, 115200 baud **[C]**.
+- Kinect v1: connects to the Jetson's **only USB-A port** **[H]**, through an Xbox 360 Kinect adapter cable **[photo]**, using libfreenect **[C]**. It is currently unplugged. **[H]**
+- Audio: the Jetson's jack output goes to a speaker with no amplifier yet. **[H]**
+- Front-panel connector pin 4 is wired into the power system, to be used for shutdown later. **[H]**
+- A TP-Link WiFi antenna is visible on the robot **[photo]**. Which WiFi adapter it belongs to **[?]**
 - WiFi on 5 GHz. The README asks for the router to be set to 80 MHz channel width and power-save off. Ethernet is available. **[H]**
 - Static IPs in the code: robot 192.168.1.21, workstation 192.168.1.2. **[C]**
 
