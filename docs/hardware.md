@@ -16,7 +16,7 @@ Bobik is a home service robot inspired by the Willow Garage PR2 (the PR2 manual 
 | Subsystem | Installed today | Notes |
 |---|---|---|
 | Triangular aluminium base with 3 steered + driven casters | yes **[H]** | aluminium frame is considered fixed **[H]** |
-| Torso with a movable body (torso lift) | frame yes, nothing mounted on the body **[H]** | lift actuator status **[?]** |
+| Torso with a movable body (torso lift) | frame yes, nothing mounted on the body **[H]** | NEMA 17 stepper with lead screw mounted, probably not wired yet **[H]** |
 | Arm with gripper | no **[H]** | design exists (`docs/mechanical/arm.FCStd`, electrical schema) **[D]** |
 | Head (pan/tilt) | **[?]** | only in the design files **[D]** |
 | On-board computer: NVIDIA Jetson TK1 | yes **[H]** | |
@@ -94,9 +94,19 @@ When the wheels were turned by hand, they gave 223–240 ticks per revolution in
 
 The rear caster under-reports by about 18%, which points to slip, a different wheel diameter, or missed edges. The bridge hard-codes `REAL_WORLD_COEF_A/B/C = 1.028 / 1.028 / 1.15`. **[C]**
 
+## 2.4 Torso
+
+- A movable body (torso lift) is mounted on the base. Nothing is mounted on the body yet. **[H]**
+- Actuator: a NEMA 17 stepper with a lead screw. **[H]** Whether it uses a trapezoidal lead screw with a nut, or a nutless type such as a rolling-ring drive, is **[?]**.
+- The motor is probably not wired yet. **[H]**
+- The design specifies a TMC2130 driver and a zero-pose end-stop **[D]**. CAD files: `torso-stepper-holder`, `torso-stepper-bearing` **[D]**.
+- Travel range, screw pitch and torso height **[?]**
+
 ## 3. Electrical
 
 ### 3.1 Power
+
+The power system from the electrical schema (`docs/electrical/electrical-schema_v1.drawio`) is **built and installed**. **[H]** Rows below that were taken from the schema are marked **[H/D]**: confirmed as built, but the exact values still come from the schema.
 
 | Item | Value | Source |
 |---|---|---|
@@ -104,11 +114,11 @@ The rear caster under-reports by about 18%, which points to slip, a different wh
 | Battery state | fully disconnected for storage, charged to ~70% | **[H]** |
 | Charging input | barrel jack on the side, ~18 V laptop adapter, ~70 W | **[H]** |
 | Charging circuit | installed | **[H]** Type **[?]** |
-| Planned docking | 17 V magnetic docking connector + QR code for navigation | **[D]** |
-| Step-down 12 V | for Jetson + Kinect (and drives? see below) | **[D]** |
-| Step-down 5 V | for Arduino, sensors, audio | **[D]** |
-| Motor supply | design says "11 V caster 45 W" ×3 and "DC Amper converter 300 W" | **[D]** Actual rail voltage **[?]** |
-| Safety | drive relay, arm relay, panic switch, voltage display, capacitive "power holder" (keeps power ~2 s for a clean shutdown), Power ON/OFF GPIO signals | **[D]** Which of these are installed **[?]** |
+| Docking | 17 V magnetic docking connector + QR code for navigation | **[D]** Whether the docking station itself exists **[?]** |
+| Step-down 12 V | for Jetson + Kinect (and drives? see below) | **[H/D]** |
+| Step-down 5 V | for Arduino, sensors, audio | **[H/D]** |
+| Motor supply | design says "11 V caster 45 W" ×3 and "DC Amper converter 300 W" | **[H/D]** Actual rail voltage **[?]** |
+| Safety | drive relay, arm relay, panic switch, voltage display, capacitive "power holder" (keeps power ~2 s for a clean shutdown), Power ON/OFF GPIO signals | **[H/D]** |
 
 The power budget from `docs/electrical/baterie.ods` is about 114 W total with the full arm, with drive at 30 W and Jetson at 15 W. The target was 30 minutes of runtime. **[D]**
 
@@ -196,8 +206,7 @@ The firmware's internal frame has Y pointing right, which is the opposite of REP
 - Exact motor models, voltages, gear ratios and gear types (drive and steering).
 - Steering pulley tooth counts (motor pulley vs. the 176T pulley?).
 - Which supply rail feeds the motors: battery direct, or a step-down?
-- Which safety items are actually installed (relays, panic switch, voltage display, power holder)?
-- Is the torso lift actuated? Is anything mounted for the head?
+- Torso lift: NEMA 17 driver (TMC2130 per schema?), lead screw pitch, travel range, end-stop. Is anything mounted for the head?
 - Real total mass, and the height of the torso.
 - Wheel-tick pin assignment (README vs. code mismatch).
 - Is the MPU-9150 still mounted, and where is it (URDF says (−0.10, 0, 0.16))?
