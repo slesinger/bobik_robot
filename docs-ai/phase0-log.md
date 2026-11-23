@@ -102,6 +102,13 @@ Concurrency (10 s each, 4 cores): one CPU ORB thread 38.6 fps; GPU ORB thread al
 - Better candidates for a wrist camera (not verified, prices not checked): Intel RealSense D405 (made for 7-50 cm, RGB + depth, USB 3), a small OAK-D Lite / OAK-D SR, or a plain small USB RGB camera (endoscope or ArduCam style, USB 2 friendly) plus a ToF distance sensor such as VL53L5CX. The plain RGB camera is the cheapest and works with the TK1's USB 2.
 - Simpler communication ideas to compare with gestures (not decided): phone/web UI (already planned), voice commands (planned), a few coarse gestures from the Kinect body skeleton or the RGB image (raised hand, pointing), ArUco/QR cards shown to the camera, physical buttons on the robot. Leap finger gestures stay as an optional later experiment.
 
+## Power consumption check (2026-11-23)
+
+- Question: can the Jetson report its own power draw? Checked read-only over SSH (run in the tmux session `bobik`).
+- **No onboard power sensor.** The `ina3221x` driver is registered in the L4T kernel, but no device is bound to it. I2C address 4-0040 on bus 4 is the AS3722 PMIC, not an INA3221. `hwmon` only has thermal sensors (MEM-therm, PLL-therm, Tboard_tegra, Tdiode_tegra).
+- `~/tegrastats` works but on TK1 it only shows RAM, CPU load, VDE and EDP limit, with no power figures.
+- So the current draw has to be measured outside the Jetson: a USB/DC inline power meter on the 230 V adapter output (or a smart plug), or a shunt/INA219 on the battery line. Until then only estimates are possible. Not decided.
+
 ## Next
 
 - Test Kinect (libfreenect, already on the Jetson) on the old system.
