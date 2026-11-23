@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "additionalDirectories": [
+      "../bobik_arduino",
+      "../bobik_driver",
+      "../bobik_web",
+      "../bobik_interfaces",
+      "../bobik_bridge"
+    ]
+  }
+}

@@ -4,8 +4,10 @@ This is the entry point to the AI-maintained documentation. Everything in `docs-
 
 | Document | Contents |
 |---|---|
+| [repositories.md](repositories.md) | Map of the sibling repos (arduino, driver, web), their interfaces, and how Claude sees them |
 | [project-goals.md](project-goals.md) | Why the project restarted, principles, budget, milestones |
 | [plan.md](plan.md) | Target architecture and the phased plan |
+| [phase0-log.md](phase0-log.md) | Chronological log of the Phase 0 bring-up: measurements, backups, tests, decisions |
 | [hardware/mechanical.md](hardware/mechanical.md) | Frame, caster modules, torso, dimensions, kinematic tree |
 | [hardware/electrical.md](hardware/electrical.md) | Power distribution, motor drivers, Arduino and Jetson pinouts, sensors |
 | [hardware/parts-inventory.md](hardware/parts-inventory.md) | Parts in use and spare parts Honza already owns (reuse first) |

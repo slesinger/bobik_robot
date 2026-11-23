@@ -112,4 +112,19 @@ See [planned-extensions.md](planned-extensions.md).
 
 ## Battery state (2026-11-23)
 
-- Honza charged the battery to about 70 % and then fully disconnected it. The BMS is inside the pack. Cell voltages and BMS state will be checked when the robot is first switched on.
+- Honza charged the battery to about 70 % about 2–3 years ago and then fully disconnected it. The BMS is inside the pack and will not be opened, so individual cell voltages are not accessible.
+- Pack: custom made by a local company. The shape suggests 4S5P (4 × 5 = 20 cells). Looks like new, no visible damage or swelling.
+- **Measured 2026-11-23, disconnected from the robot: 13.6 V** (about 3.4 V per cell, roughly 10–20 % charge). Consistent with 2–3 years of self-discharge plus BMS standby drain. No sign of a fault, and above the ~12 V protection cutoff.
+- Next: charge it (4S Li-ion charger or bench supply, CV 16.8 V, current limit about 1.5 A, stop at about 0.1–0.2 A), watched, and record the charge delivered to estimate real capacity against the nominal 15 Ah. Do not use the robot's own charge circuit until its termination behaviour is known (see [open-questions.md](../open-questions.md)). Afterwards store at about 50–70 %.
+- **First charge started 2026-11-23** through the robot's own charge path: ~18 V adapter (18 V measured with no load) into the cable prepared for the magnetic docking connector. The power module LED turned blue when the adapter was plugged in and red after the manual charge switch was turned on (presumably "charging"). Neither the pack nor the adapter got warm.
+- **Charging path as explained by Honza (2026-11-23):**
+  - The 17–18 V adapter plugs into the 230 V wall outlet. Its barrel jack is missing (not found), so it is provisionally wired to the "white cable" that is prepared for the future magnetic docking connector.
+  - From there the path goes through the **manual charge switch**, then **in series a relay that the Arduino can switch** (a software charge switch), then to the battery. There is no charge controller or current limiter. Current limiting and overcharge protection are done by the BMS inside the pack (Honza's expectation: it passes only what healthy cells accept, and should stop a bit below 100 %).
+  - The diagram (`docs/electrical/electrical-schema_v1.drawio`, page "Power: The Thing") shows this as a "Signal to charge" switch. It also shows 17.3 V, which is above the 16.8 V full voltage of 4S, so for the first charge the BMS behaviour is verified by hand (see [open-questions.md](../open-questions.md)).
+- **Capacitive power holder** (the blue box in the diagram) contains two relays that are never closed at the same time. The whole system runs either from the 230 V adapter or from the battery.
+- **Switches (corrected by Honza):** the big **emergency switch cuts the whole robot, including the Jetson and sensors**. The small **red switch cuts only the motor side**. Honza finds the opposite assignment more intuitive, but leaves it as it is for now.
+- **Unknown thin yellow wire** leaves the battery pack next to the thick red and black power cables. Its purpose is not known. See [open-questions.md](../open-questions.md).
+- **After about 30 min of charging (2026-11-23): 15.8 V measured with charging switched off and the pack unloaded** (about 3.95 V per cell, roughly 80 % if it were a rested reading). This is a surprisingly fast rise for a ~70 W adapter (about 3–4 A, so about 2 Ah in 30 min) on a nominal 15 Ah pack. Either it was surface charge right after disconnect, or the real capacity is much lower than 15 Ah. To be settled by a rested reading (10–15 min) and by measuring charge current and total charge until full. The adapter got warm but not hot.
+- The charge path is a separate branch from the supply path (Honza). Robot supply: either the 230 V adapter or the battery, never both at once (the two relays in the capacitive power holder).
+
+- **First boot 2026-11-23:** the Jetson is on the home network (WiFi, no Ethernet) at **192.168.1.21** (the address the legacy stack used), MAC a0:a8:cd:04:52:4a, answers ping in about 2 ms, SSH port 22 open. Powered from the 230 V adapter.

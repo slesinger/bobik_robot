@@ -9,5 +9,10 @@ This is the single list of what is still unknown. The questions are grouped by t
 
 ## Bench (when the robot is first switched on)
 
-- Battery cell voltages and BMS state (charged to about 70 %, disconnected).
+- Battery: pack voltage was 13.6 V on 2026-11-23 (see [hardware/electrical.md](hardware/electrical.md)). Still open: real capacity after charging, and BMS behaviour under load. Cell voltages are not accessible.
+- Charge path: adapter → manual switch → Arduino relay → battery, with no charge controller. The BMS is expected to limit current and voltage. Verify on the first full charge: measure the charge current, the voltage at which the charge stops, and how the BMS behaves at full. Also find out what the blue and red LEDs on the power module mean.
 - What the "DC Amper converter 300 W" in the charging path is. The schema text could not be found by search; check the drawio.
+
+## Repositories
+
+- `bobik_interfaces` has no `HumanQuery.srv`, although `bobik_robot` and `bobik_web` both use it. Was it never committed, or is it defined somewhere else?

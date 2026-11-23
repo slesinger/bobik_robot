@@ -48,3 +48,7 @@ This is a summary of the design notes for parts of Bobik that do not exist yet. 
 ## Docking
 
 - Docking station with a 17 V magnetic connector, and a QR code for final alignment.
+
+## Possible improvements (ideas, not scheduled)
+
+- **Battery pack thin yellow wire.** A thin yellow wire leaves the pack next to the thick red and black cables. Its purpose is unknown (candidates: temperature sensor, BMS wake/enable, cell tap, or a data line). If it turns out to be a BMS data or temperature line, it could feed battery status (temperature, state of charge) to the Arduino or the phone UI. Not investigated for now. If investigated later: disconnect the pack, connect the wire to nothing, then measure its voltage against black and red, and its resistance against black (an NTC changes when warmed by a finger). Never short it to the power wires. Or ask the pack manufacturer.

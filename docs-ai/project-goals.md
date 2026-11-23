@@ -43,4 +43,5 @@ Bobik was enjoyable to build, but development stalled. Cheap, imprecise hardware
 
 - Drive mechanics: improvements to the caster drive and steering (motor drivers, encoders, backlash).
 - Depth sensing: keep the Kinect v1 or move to a newer sensor.
-- How navigation for M2 will work.
+- How navigation for M2 will work. Tendency: partly vision-based, with feature extraction on the robot so only keypoints go over WiFi.
+- Onboard computer: keep the TK1 (old L4T, CUDA 6.5 possible) or replace it (Orin Nano is over budget at about $400–560; x86 mini PC is cheaper but has no CUDA). Decide after measuring feature extraction on the TK1.
