@@ -12,6 +12,7 @@ Notation: no tag means documented in the original design files and confirmed by 
   - XV-11 lidar, Kinect v1
 - **Not built:** head and arm **(planned)**.
 - **Overall envelope** from `docs/CAD/bobik-assembly.FCStd`: about 0.52 × 0.55 m footprint and about 1.2 m high, including the torso mast.
+- **Mass:** 11.5 kg as of 2026-11-23, and expected to grow as hardware is added (the URDF masses are rough placeholders).
 
 ### Kinematic tree (`docs/mechanical/mechanical-schema_v1.drawio`)
 
@@ -70,24 +71,31 @@ Each caster steers and drives independently. The design went through several ite
 ### Drive
 
 - Chinese DC gear-motor with a built-in gearbox, mounted vertically in a 3D-printed clamp (`drive-motor-holder-a/b.stl`).
-- A straight bevel gear pair turns the drive 90° onto the horizontal wheel axle (ratio **[?]**).
+- A straight bevel gear pair turns the drive 90° onto the horizontal wheel axle (ratio 1:1).
 - Wheel: the larger size of inline-skate wheel, D = 123 mm, 24 mm wide.
 - Top speed is 0.4 m/s, which is also the firmware cap `CASTER_DRIVE_MAX_SPEED`.
 - The electrical schema gives drive motor stall as about 6 A at 16 V. In normal use each caster gets an 11 V / 45 W supply (see [electrical.md](electrical.md)).
 - The motor bodies are wrapped in aluminium foil, and the leads carry ferrite coils to suppress EMI.
-- Motor model and gearbox ratio **[?]**
+- Motor: no label or datasheet left (the foil wrap is not to be removed). Body Ø24.4 mm, about $15, built-in gearbox, nominal 12 V; probably driven from the battery voltage by PWM. Most likely the 25GA-370 / JGA25-370 family.
+- Gearbox: **estimated 60 rpm output** (Honza recognises 60 rpm). Derived, not measured: 0.4 m/s is the true maximum, wheel circumference π × 123 mm = 386 mm, so 1.035 rev/s ≈ 62 rpm at the wheel. With the 1:1 bevel pair that equals the gearbox output speed. The motor ratio is probably about 1:100.
+- To verify (not now, robot stays off): at 100% PWM, wheel rpm = IR ticks per second ÷ 240 × 60.
 
 ### Steering
 
 - A similar Chinese DC gear-motor, in `rotation-motor-holder`. It drives a 2GT timing belt (closed, 610 mm) onto a **176-tooth 2GT pulley** (`drive-rotation-tgear176`, Ø112 mm) fixed to the caster.
 - A belt idler/tensioner sits on a threaded rod (`rotation-idler.stl`).
-- Motor pulley tooth count **[?]**, so the overall steering ratio **[?]**.
+- Motor: same family as the drive motor but a different gearbox. Honza thinks it is **about 2× the drive speed, ≈120 rpm** (not verified).
+- Motor pulley: **15 teeth** (counted by Honza, may be a miscount; it could be a 16-tooth GT2 pulley with 5 mm bore, bought as a 2-pulley set with a belt). A smooth 20-tooth, 5 mm bore, 6 mm wide GT2 idler tensions the belt. Belt ratio 176 ÷ 15 = 11.7:1.
+- Expected caster speed from these numbers: 120 rpm ÷ 11.7 ≈ 10 rpm, so 360° would take about 6 s.
+- **Inconsistent with memory:** Honza remembers a full caster turn taking about 3 s (≈ 20 rpm). That needs either a motor output of about 235 rpm (a 4× drive-speed gearbox) or a 30-tooth motor pulley. Resolve by recounting the pulley teeth, or by logging the AS5048A angle against time at full PWM. Belt length alone cannot decide: with 610 mm the centre distance would be about 210 mm (15T) or 202 mm (30T).
 - **The steering axle is hollow.** The drive motor and IR sensor cables pass through it. Mechanically the caster could rotate without limit, but the cables do not allow it.
-- The limit is in software:
-  - The firmware keeps each caster within (−180°, +180°) of the forward-zero position and never wraps.
-  - `optimize_rotation()` chooses either the target angle or the opposite angle with the drive reversed. It prefers the smaller absolute angle and the shorter travel.
-  - The URDF limit is ±90°, which is inconsistent with the firmware.
-- Steering end-stop switches are in the electrical design. Whether they are installed **[?]**
+- **Cable limit:** the cables in the axle survive at most **2 full rotations** (Honza). There are no end-stop switches; the limit is purely in software (read from `bobik_arduino`, 2026-11-23):
+  - The AS5048A is read as a single-turn angle in units −8192…+8191 (±180°) around the zero offset (`Caster::getRotation`). **The firmware has no multi-turn counter.** It cannot know how many turns the cable has taken.
+  - Every target is wrapped into ±π (`simplify_rad`, `setCmdVel`), and the steering control (`Caster::execute`) is a plain `target − current` in those ±180° units. It never goes through the ±180° seam in the short direction; it always turns back through zero. So the caster stays in (−180°, +180°) and the cable never takes more than half a turn each way.
+  - `optimize_rotation()` chooses between the target angle and the opposite angle (with the drive reversed), by the cost |angle| + 0.8 × travel. This keeps the casters mostly within about ±90° of forward, so the practical range is about ±90° (matching the URDF limit ±π/2) and only goes further when the caster is already beyond it, with hysteresis.
+  - **There is no explicit "unwind when maxed out" routine** in the Arduino code. The unwinding Honza remembers is the effect of the above: when the commanded angle jumps across the seam, the caster swings back through zero (up to about 360° of travel). While the caster is more than 0.5 rad (28°) off target, `STOP_DUE_ROTATION_DIFF` stops the drive.
+  - Consequence for the redesign: the ±180° wrap and the swing-back are safe for the cable (never beyond 1 turn of the 2 allowed), but a new controller that counts turns or takes the shortest path across the seam would cross the physical limit. Keep the single-turn range ±180° or add a real turn counter and explicit limits.
+- Steering end-stop switches: none installed (Honza, 2026-11-23: "no end stop switches yet").
 
 ### Caster sensors
 
@@ -107,16 +115,25 @@ Each caster steers and drives independently. The design went through several ite
 
 ## 4. Torso
 
-- **Mast:** a vertical aluminium profile about 1.1–1.2 m high (83 × 20 mm section, with a pattern of pockets) on the base (`base_link.FCStd`, "torso").
+- **Mast** (Czech: svislý nosný sloup / stožár; the vertical milled aluminium column the torso moves on): about 1.1–1.2 m high, 83 × 20 mm section with a pattern of pockets. Dimensions are from Honza's precise CAD model and are trusted on the base (`base_link.FCStd`, "torso").
 - **Lift:** NEMA 17 stepper driving a **trapezoidal lead screw with a nut** (`torso_lift_link/trapezoidal-nut-holder`, `base_link/torso-stepper-holder`, `torso-stepper-bearing`). There is also a safety end-stop part (`backup/torso-security-endstop.stl`).
 - **Body:** the movable body plate is mounted, with nothing on it yet.
 - **Status:** the stepper is mounted but probably not wired.
 - The electrical schema plans a stepper driver (A4988 / TMC2130) and a zero-pose end-stop.
-- Screw pitch and travel range **[?]**
+- **Decks:** the robot has a **lower deck** (5 mm acrylic floor plate) carrying the torso stepper, battery, Arduino and the power distribution, and an **upper deck** carrying the Jetson TK1.
+- **Lead screw (caliper, 2026-11-23, error about ±0.2 mm):**
+  - Length 98.5 cm, including the shaft coupler, from the lower deck up to the end of the rod. This is not the usable travel.
+  - Major diameter 9.75 mm, thread pitch 2.8 mm. This points to **Tr10×3** (metric trapezoidal, 10 mm nominal, 3 mm pitch); a screw measured slightly under its nominal size is normal. It is not T8 (my first guess from the ruler photo was wrong). Single-start is confirmed by the turn test: 10 turns of the rod moved the nut 30.3 mm, so the lead is **3.03 mm/rev** (a single-turn reading of 3.34 mm is within hand-measurement error).
+  - Resulting resolution (if Tr10×3, single start): 200 full steps/rev → 0.015 mm per full step, about 1 µm at 1/16 microstepping. A 1 m traverse is about 333 revolutions.
+- **Stepper:** NEMA 17, 40 N·cm, 3.96 V per coil (AliExpress listing "Schrittmotor Nema 17 40Ncm", current not known). It sits on the lower deck in an orange 3D-printed holder. Honza has several more of the same.
+- **Coupler:** flexible CNC aluminium shaft coupler, D19 × L25 mm, with a choice of bore sizes up to 10 mm. A 10 mm bore on the screw fits the Tr10 diameter. The motor side is the usual 5 mm NEMA 17 shaft.
+- **Carriage:** the nut is held in an orange 3D-printed block (`trapezoidal-nut-holder`) that runs in a window of the milled aluminium mast. The body plate slides on a round chrome guide rod through two zinc-alloy blocks (hardware blocks, not linear bearings) on the side.
+- **End-stops:** none installed yet (Honza, 2026-11-23). The torso can drive into its mechanical limits, so wiring needs a homing switch and a safety limit.
+- Usable travel: **a design decision, not yet fixed.** It depends on how the moving torso part is designed on the rod. Upper bound: the 98.5 cm rod length minus the coupler (25 mm), the nut block and safety margins at both ends. The carriage in the 2026-11-23 photo is somewhere in between the limits; no height was measured.
 
 ## 5. Other mounts
 
-- Lidar (XV-11) on the base: URDF gives (0.12, 0.13, 0.2325) m **[?]**.
-- IMU holder (`electrical/imu-holder.stl`): URDF gives (−0.10, 0, 0.16) m **[?]**.
+- Lidar (XV-11) on the base: (0.12, 0.13, 0.2325) m from `base_link`, taken from the URDF (Honza: the URDF is the reference).
+- IMU holder (`electrical/imu-holder.stl`): (−0.10, 0, 0.16) m from `base_link`, taken from the URDF.
 - WiFi antenna holder (TP-Link antenna) and the control panel holder (`electrical/antenna-holder*`, `controlpanel*`).
 - Kinect: a temporary head mount exists in CAD (`head_pan_link/temp-kinect.stl`), along with head pan link drafts **(planned)**.

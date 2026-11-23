@@ -8,6 +8,7 @@ This is the entry point to the AI-maintained documentation. Everything in `docs-
 | [plan.md](plan.md) | Target architecture and the phased plan |
 | [hardware/mechanical.md](hardware/mechanical.md) | Frame, caster modules, torso, dimensions, kinematic tree |
 | [hardware/electrical.md](hardware/electrical.md) | Power distribution, motor drivers, Arduino and Jetson pinouts, sensors |
+| [hardware/parts-inventory.md](hardware/parts-inventory.md) | Parts in use and spare parts Honza already owns (reuse first) |
 | [hardware/planned-extensions.md](hardware/planned-extensions.md) | Arm, head and other designed-but-not-built parts |
 | [software-legacy.md](software-legacy.md) | How the 2023 software worked: protocol, control, odometry, known defects |
 | [open-questions.md](open-questions.md) | The single list of unknowns, grouped by topic |

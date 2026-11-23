@@ -2,24 +2,12 @@
 
 This is the single list of what is still unknown. The questions are grouped by topic and asked one topic at a time, when that topic is being worked on. When something is answered, it is removed here and written into the relevant document.
 
-## Caster mechanics (when a caster is taken apart)
+## Caster mechanics (parked until the robot is switched on)
 
-- Drive and steering motor models (label), rated voltage, and gearbox ratio.
-- Bevel gear pair ratio.
-- Steering motor pulley tooth count. The caster pulley is a 176T 2GT.
-- Are steering end-stop switches installed?
+- Steering speed: the motor pulley was counted as 15T (maybe 16T), but the remembered 3 s per caster revolution fits 30T or a 4× gearbox better. Recount, or measure the turn rate. See [hardware/mechanical.md](hardware/mechanical.md#steering).
+- Drive/steering motor exact model and gearbox ratio: no label. Only estimates exist (drive ≈ 60 rpm, steering ≈ 120 rpm). Verify on the bench later.
 
-## Torso
+## Bench (when the robot is first switched on)
 
-- Lead screw pitch, travel range, and whether an end-stop is installed.
-
-## Sensor placement and mass (tape measure)
-
-- Lidar and IMU positions relative to the robot centre. These are needed for the URDF.
-- Real total mass.
-
-## To verify on the bench (no question for Honza)
-
-- IR wheel-tick pin mapping: the README (FL/FR/R = 22/24/26) and `robot_config.h` (24/26/22) disagree.
-- What the "DC Amper converter 300 W" is in the charging path.
-- Battery cell voltages and BMS state after storage.
+- Battery cell voltages and BMS state (charged to about 70 %, disconnected).
+- What the "DC Amper converter 300 W" in the charging path is. The schema text could not be found by search; check the drawio.

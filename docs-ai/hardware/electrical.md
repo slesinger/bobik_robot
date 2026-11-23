@@ -65,7 +65,7 @@ From the README and `robot_config.h`. The README also documents wire colours: ye
 | 44 / 45 / 46 | ENA (PWM) steering FL / FR / R |
 | 28, 30 / 36, 38 / 37, 39 | IN1, IN2 drive FL / FR / R |
 | 32, 34 / 40, 42 / 41, 43 | IN3, IN4 steering FL / FR / R |
-| 22 / 24 / 26 | IR wheel-tick inputs. The README says FL/FR/R = 22/24/26, but `robot_config.h` maps FL = 24, FR = 26, R = 22 [?] |
+| 22 / 24 / 26 | IR wheel-tick inputs. `robot_config.h` (source code, trusted) maps FL = 24, FR = 26, R = 22. The old README listed 22/24/26 and is wrong |
 | 10 / 11 / 12 | AS5048A chip select FL / FR / R |
 | 50 / 51 / 52 | SPI MISO / MOSI / SCK, shared by all AS5048A |
 | 20 / 21 | I2C SDA / SCL for the MPU-9150 IMU |
@@ -108,3 +108,8 @@ Old OS: L4T 21.3 (Ubuntu 14.04) with the Grinch kernel. The full setup notes are
 - Touch display (HDMI), I2S mic array, audio amplifier, front and back USB cameras, PIR sensor, LEDs, laser range finder, Bluetooth.
 
 See [planned-extensions.md](planned-extensions.md).
+
+
+## Battery state (2026-11-23)
+
+- Honza charged the battery to about 70 % and then fully disconnected it. The BMS is inside the pack. Cell voltages and BMS state will be checked when the robot is first switched on.
